@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Seretra</string>
     <string name="gps_permission_denied">Bitte erlauben sie den Standort Zugriff, damit wir sie orten können!</string>
