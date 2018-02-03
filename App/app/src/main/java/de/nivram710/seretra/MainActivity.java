@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onLocationChanged(Location location) {
                 changedLocation = location;
-                koordinatenText.setText("" + changedLocation.getLongitude() + " " + changedLocation.getLongitude());
+                showLocation(changedLocation);
             }
 
             @Override
@@ -96,6 +96,23 @@ public class MainActivity extends AppCompatActivity {
         } else {
             locationManager.requestLocationUpdates("gps", 1000, 1, locationListener);
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void showLocation(Location location) {
+        String latitudeDirection;
+        String longtitudeDirection;
+
+        // Überprüfen ob nördlich oder südlich
+        if(location.getLatitude() > 0) latitudeDirection = "N";
+        else latitudeDirection = "S";
+
+        // Überprüfen ob westlich oder östlich
+        if(location.getLongitude() > 0) longtitudeDirection = "E";
+        else longtitudeDirection = "W";
+
+        koordinatenText.setText(latitudeDirection + location.getLatitude() + "°\n" + longtitudeDirection + location.getLongitude() + "°");
+
     }
 
     @SuppressLint("MissingPermission")
