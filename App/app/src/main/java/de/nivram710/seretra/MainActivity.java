@@ -62,15 +62,11 @@ public class MainActivity extends AppCompatActivity {
 
         startLocation();
 
-        if (getLocation() != null) Log.e("MainActivity/if", getLocation().toString());
-        else Log.e("MainActivity/else", "getLocation = null");
-
     }
 
     @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.e("Peter", permissions[0]);
         switch (requestCode) {
             case PERMISSIONS_ACCESS_FINE_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -94,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_ACCESS_FINE_LOCATION);
         } else {
-            locationManager.requestLocationUpdates("gps", 1000, 1, locationListener);
+            locationManager.requestLocationUpdates("gps", 1000, 0, locationListener);
         }
     }
 
