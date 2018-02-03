@@ -1,18 +1,30 @@
 package de.nivram710.seretra;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int PERMISSIONS_ACCESS_COARSE_LOCATION = 1;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private Location changedLocation;
+
+    private static final int PERMISSIONS_ACCESS_FINE_LOCATION = 1;
     TextView koordinatenText;
 
     @Override
@@ -23,28 +35,78 @@ public class MainActivity extends AppCompatActivity {
         koordinatenText = findViewById(R.id.koordinaten);
         koordinatenText.setText(R.string.app_name);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_COARSE_LOCATION },
-                    PERMISSIONS_ACCESS_COARSE_LOCATION);
-        }
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                changedLocation = location;
+                koordinatenText.setText("" + changedLocation.getLongitude() + " " + changedLocation.getLongitude());
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        };
+
+        startLocation();
+
+        if (getLocation() != null) Log.e("MainActivity/if", getLocation().toString());
+        else Log.e("MainActivity/else", "getLocation = null");
 
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.e("Peter", permissions[0]);
         switch (requestCode) {
-            case PERMISSIONS_ACCESS_COARSE_LOCATION:
+            case PERMISSIONS_ACCESS_FINE_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, getString(R.string.gps_permission_user_accept), Toast.LENGTH_LONG).show();
+                    locationManager.requestLocationUpdates("gps", 1000, 0, locationListener);
                 } else {
                     Toast.makeText(this, getString(R.string.gps_permission_user_denied), Toast.LENGTH_LONG).show();
                 }
                 break;
         }
+
     }
 
-    // todo: GPS aktivierung herausfinden
-    // todo: Standort findung in den Griff bekommen
+    private boolean isPermissionsGranted() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
 
+    @SuppressLint("MissingPermission")
+    private void askForPermission() {
+        if (!(isPermissionsGranted())) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_ACCESS_FINE_LOCATION);
+        } else {
+            locationManager.requestLocationUpdates("gps", 1000, 1, locationListener);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void startLocation() {
+        askForPermission();
+    }
+
+    private Location getLocation() {
+        return changedLocation;
+    }
+
+    // todo: run / keep running when closed
+    // todo: sendLocationToServer()
 }
