@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                Log.e("LocationListener", "Location changed");
                 changedLocation = location;
                 showLocation(changedLocation);
             }
@@ -49,12 +51,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onProviderEnabled(String s) {
-
             }
 
             @Override
             public void onProviderDisabled(String s) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
         };
@@ -113,10 +115,6 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("MissingPermission")
     private void startLocation() {
         askForPermission();
-    }
-
-    private Location getLocation() {
-        return changedLocation;
     }
 
     // todo: run / keep running when closed
