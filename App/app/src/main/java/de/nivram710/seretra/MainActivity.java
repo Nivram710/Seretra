@@ -71,7 +71,24 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void showLocation(String location) {
-        koordinatenText.setText(location);
+        String titudes[] = location.split(";");
+        String latitudeString = titudes[0];
+        String longtitudeString = titudes[1];
+
+        if (latitudeString.contains("-")) {
+            latitudeString = "S" + latitudeString.replace("-","");
+        } else {
+            latitudeString = "N" + latitudeString;
+        }
+
+        if(longtitudeString.contains("-")) {
+            longtitudeString = "W" + longtitudeString.replace("-", "");
+        } else {
+            longtitudeString = "E" + longtitudeString;
+        }
+
+        koordinatenText.setText(latitudeString + "\n" + longtitudeString);
+
     }
 
     @SuppressLint("MissingPermission")
@@ -85,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         if(broadcastReceiver == null) {
             broadcastReceiver = new BroadcastReceiver() {
+                @SuppressWarnings("ConstantConditions")
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     showLocation("" + intent.getExtras().get("location"));
