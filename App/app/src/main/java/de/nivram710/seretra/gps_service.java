@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 
+/**
+ * Die Klasse ist für die Ortung des Nutzers verantwortlich
+ */
 public class gps_service extends Service {
 
     private LocationManager locationManager;
@@ -21,6 +24,7 @@ public class gps_service extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
 
     @SuppressLint("MissingPermission")
     @Override

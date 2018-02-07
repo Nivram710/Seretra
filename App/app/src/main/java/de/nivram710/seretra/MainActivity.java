@@ -15,6 +15,10 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Die Klasse startet den GPS-Service, verwaltet die von dem
+ * Service gesammelten Daten und zeigt diese an.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private BroadcastReceiver broadcastReceiver;
@@ -30,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
         koordinatenText = findViewById(R.id.koordinaten);
         koordinatenText.setText(R.string.app_name);
 
-        startLocation();
+        askForPermission();
+        startGPSService();
 
     }
 
@@ -54,6 +59,10 @@ public class MainActivity extends AppCompatActivity {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
+    /**
+     * Die Methode überprüft, ob die benötigeten Permissions erhalten worden sind.
+     * @retun void
+     */
     @SuppressLint("MissingPermission")
     public void askForPermission() {
         if (!(isPermissionsGranted())) {
@@ -64,11 +73,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Die Methode startet den GPS-Service
+     * @return void
+     */
     private void startGPSService() {
         Intent gps_service_intent = new Intent(getApplicationContext(), gps_service.class);
         startService(gps_service_intent);
     }
 
+    /**
+     * Die Methode zeigt die vom Service gesammelten Daten an.
+     * @param location
+     */
     @SuppressLint("SetTextI18n")
     public void showLocation(String location) {
         String titudes[] = location.split(";");
@@ -89,12 +106,6 @@ public class MainActivity extends AppCompatActivity {
 
         koordinatenText.setText(latitudeString + "\n" + longtitudeString);
 
-    }
-
-    @SuppressLint("MissingPermission")
-    private void startLocation() {
-        askForPermission();
-        startGPSService();
     }
 
     @Override
