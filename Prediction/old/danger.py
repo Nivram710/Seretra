@@ -27,3 +27,5 @@ b1 = Bogey("car", 234, [
 
 for point, i in enumerate(b1.predict()):
     accuracy = i * 0.1
+
+print(b1.predict())
