@@ -8,7 +8,7 @@ class Vec2:
             self.y = p2
         else:
             self.__init__(1, 0)
-            self.rotate(p1)
+            self.rotated(p1, True)
             self.x *= p2
             self.y *= p2
 
@@ -45,12 +45,14 @@ class Vec2:
     def getMagnitude(self):
         return math.sqrt(self.x**2 + self.y**2)
 
-    def rotate(self, angle):
+    def rotated(self, angle, modify=False):
         angle = angle / 360 * 2 * math.pi
         x = self.x * math.cos(angle) - self.y * math.sin(angle)
         y = self.x * math.sin(angle) + self.y * math.cos(angle)
-        self.x = x
-        self.y = y
+        if modify:
+            self.x = x
+            self.y = y
+        return Vec2(x, y)
 
     def __repr__(self):
         return f"Vec2({self.x}, {self.y})"
