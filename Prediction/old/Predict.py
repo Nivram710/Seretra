@@ -15,8 +15,8 @@ def getPositiveAngle(angle):
 
 
 def applyWeights(data, weights):
-    # Trim ROTATION_PREDICTION_WEIGHTS to the size of the angles
-    weights = ROTATION_PREDICTION_WEIGHTS[:len(data)]
+    # Trim weights to the size of the angles
+    weights = weights[:len(data)]
 
     # Make the sum of the weights equal to 1
     adjusted_weights = list(map(lambda w: w/sum(weights),

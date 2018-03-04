@@ -1,0 +1,31 @@
+import scipy.interpolate
+from vec2 import Vec2
+import matplotlib.pyplot as plt
+
+data = [(Vec2(1.49, 0.12), 0),
+        (Vec2(2.34, 2.344),  1),
+        (Vec2(5.34, 5.344),  2),
+        (Vec2(4.44, 4.44),  3)]
+
+
+def interpolate(data, stepsize):
+    x = [d[0].x for d in data]
+    # y = [d[0].y for d in data]
+    time = [d[1] for d in data]
+
+    fx_linear = scipy.interpolate.interp1d(time, x)
+    # fy_linear = scipy.interpolate.interp1d(y, time)
+    fx_cubic = scipy.interpolate.interp1d(time, x, kind="cubic")
+    # fy_cubic = scipy.interpolate.interp1d(y, time, kind="cubic")
+
+    timeNew = range(data[0][1], data[-1][1]+1, stepsize)
+
+    plt.plot(time, x, 'o',
+             timeNew, fx_linear(timeNew), '-',
+             timeNew, fx_cubic(timeNew), '--')
+
+    plt.legend(['data', 'linear', 'cubic'], loc='best')
+    plt.show()
+
+
+interpolate(data, 1)

@@ -1,4 +1,7 @@
 from vec2 import Vec2
+from interpolate import interpolate
+
+ROTATION_PREDICTION_WEIGHTS = [x**2 for x in range(100, 1, -1)]
 
 
 # Return information about the positions by analysing them
@@ -24,18 +27,40 @@ def unpack(positions):
 
 
 # Turn a movement back into a position
-def pack(movement, positions, angles):
+def pack(movement, angles, positions):
     return positions[-1] + movement.rotated(angles[-1])
 
 
-def predict(positions):
-    movement_changes, angles, _, _ = unpack(positions)
+def applyWeights(data, weights):
+    # Trim weights to the size of the angles
+    weights = weights[:len(data)]
 
-    # TODO detect change in movement pattern
-    predicted_movement_change = movement_changes[-1]
+    # Make the sum of the weights equal to 1
+    adjusted_weights = list(map(lambda w: w/sum(weights),
+                                weights))
+    # Apply weights to angles
+    weighted_data = [a * b for a, b in zip(data,
+                                           adjusted_weights)]
+    return weighted_data
 
+
+def predict(data, timeStep):
+    data = interpolate(data, 0.1)
+    positions = list(map(lambda d: d[0], data))
+    times = list(map(lambda d: d[1], data))
+
+    # Get information about the positions
+    movements, angles, _, _ = unpack(positions)
+
+    # Use average rotation of last movements and the current speed for the next
+    # position
+    predicted_movement = Vec2(sum(applyWeights(movements,
+                                               ROTATION_PREDICTION_WEIGHTS),
+                                  Vec2(0, 0)).getAngle(),
+                              movements[-1].getMagnitude())
     # Dampen rotation
-    predicted_movement_change = predicted_movement_change.rotated(
-            -predicted_movement_change.getAngle() * 0.15)
+    predicted_movement = predicted_movement.rotated(
+            -predicted_movement.getAngle() * 0.5)
+    predicted_movement *= 0.8
 
-    return pack(predicted_movement_change, positions, angles)
+    return pack(predicted_movement, angles, positions), times[-1] + timeStep
