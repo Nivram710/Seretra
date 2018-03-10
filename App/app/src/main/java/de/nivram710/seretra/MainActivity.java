@@ -129,5 +129,4 @@ public class MainActivity extends AppCompatActivity {
         if(broadcastReceiver != null) unregisterReceiver(broadcastReceiver);
     }
 
-    // todo: sendLocationToServer()
 }
