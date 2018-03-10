@@ -1,7 +1,7 @@
 from vec2 import Vec2
 from interpolate import interpolate
 
-ROTATION_PREDICTION_WEIGHTS = [x**2 for x in range(100, 1, -1)]
+ROTATION_PREDICTION_WEIGHTS = [x for x in range(100, 1, -1)]
 
 
 # Return information about the positions by analysing them
@@ -45,7 +45,7 @@ def applyWeights(data, weights):
 
 
 def predict(data, timeStep):
-    data = interpolate(data, 0.1)
+    data = interpolate(data, timeStep)
     positions = list(map(lambda d: d[0], data))
     times = list(map(lambda d: d[1], data))
 
@@ -60,7 +60,6 @@ def predict(data, timeStep):
                               movements[-1].getMagnitude())
     # Dampen rotation
     predicted_movement = predicted_movement.rotated(
-            -predicted_movement.getAngle() * 0.5)
-    predicted_movement *= 0.8
+            -predicted_movement.getAngle() * 0.95)
 
     return pack(predicted_movement, angles, positions), times[-1] + timeStep
