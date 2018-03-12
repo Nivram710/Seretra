@@ -13,7 +13,6 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
