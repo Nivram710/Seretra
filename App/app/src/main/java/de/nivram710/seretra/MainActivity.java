@@ -1,4 +1,5 @@
 package de.nivram710.seretra;
+
 import android.Manifest;
 
 import android.annotation.SuppressLint;
@@ -11,23 +12,21 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Die Klasse startet den GPS-Service, verwaltet die von dem
  * Service gesammelten Daten und zeigt diese an.
  */
-// todo: anti chrash at ask for Permissions (maybe wait)
 public class MainActivity extends AppCompatActivity {
 
     private BroadcastReceiver broadcastReceiver;
 
-    private static final int PERMISSIONS_ACCESS_FINE_LOCATION = 1;
-    private static final int PERMISSIONS_READ_PHONE_STATE = 2;
+    int permission_all = 1;
+    String[] neededPermissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET, Manifest.permission.READ_PHONE_STATE};
+
     TextView koordinatenText;
 
     @Override
@@ -38,59 +37,27 @@ public class MainActivity extends AppCompatActivity {
         koordinatenText = findViewById(R.id.koordinaten);
         koordinatenText.setText(R.string.app_name);
 
-        askForPermission();
-        startGPSService();
-
+        if(!hasPermissions(this, neededPermissions)) {
+            ActivityCompat.requestPermissions(this, neededPermissions, permission_all);
+        } else {
+            startGPSService();
+        }
     }
 
-    @SuppressLint({"MissingPermission", "ShowToast"})
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_ACCESS_FINE_LOCATION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, getString(R.string.gps_permission_user_accept), Toast.LENGTH_LONG).show();
-                    startGPSService();
-                } else {
-                    Toast.makeText(this, getString(R.string.gps_permission_user_denied), Toast.LENGTH_LONG).show();
+        startGPSService();
+    }
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
                 }
-            case PERMISSIONS_READ_PHONE_STATE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Indetifikationsnummer darf gelesen werden!", Toast.LENGTH_LONG);
-                } else {
-                    Toast.makeText(this, "Wir brauchen die Erlaubnis um sie Indetifizieren zu können", Toast.LENGTH_LONG);
-                }
-                break;
+            }
         }
-
-    }
-
-    /**
-     * Überprüft ob die Berechtigung zur Koordianten ausgelesen werden dürfen
-     */
-    public boolean isPermissionsGrantedAccessLocation() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public boolean isPermissionGrantedReadPhoneState() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    /**
-     * Die Methode überprüft, ob die benötigeten Permissions erhalten worden sind.
-     *
-     * @retun void
-     */
-    @SuppressLint("MissingPermission")
-    public void askForPermission() {
-        if (!(isPermissionsGrantedAccessLocation())) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_ACCESS_FINE_LOCATION);
-        }
-        if (!(isPermissionGrantedReadPhoneState())) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
-                    PERMISSIONS_READ_PHONE_STATE);
-        }
+        return true;
     }
 
     /**
@@ -98,9 +65,15 @@ public class MainActivity extends AppCompatActivity {
      *
      * @return void
      */
+    @SuppressLint("SetTextI18n")
     private void startGPSService() {
-        Intent gps_service_intent = new Intent(getApplicationContext(), gps_service.class);
-        startService(gps_service_intent);
+        if (hasPermissions(this, neededPermissions)) {
+            Intent gps_service_intent = new Intent(getApplicationContext(), gps_service.class);
+            startService(gps_service_intent);
+        } else {
+            koordinatenText.setTextSize(12);
+            koordinatenText.setText(getText(R.string.no_permissions)+ "\n" + getText(R.string.how_fix_problem));
+        }
     }
 
     /**
