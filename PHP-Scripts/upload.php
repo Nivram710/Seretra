@@ -1,6 +1,6 @@
 <?php
 
-$debug = true;
+$debug = false;
 $imei = $_GET["imei"];
 $longtitude = $_GET["longtitude"];
 $latitude = $_GET["latitude"];
@@ -18,11 +18,12 @@ if($debug) {
 
 	// TODO: check if values are not empty
 	echo "python /home/pi/development/mint/seretra/Prediction/append.py" . " " . $imei . " " . $time . " " . $longtitude . " " . $latitude . " 2>&1 &";
-	exec("python /home/pi/development/mint/seretra/Prediction/append.py" . " " . $imei . " " . $time . " " . $longtitude . " " . $latitude . " 2>&1 &", $out);
-	echo "<br>Outputs:<br>";
-	foreach($out as $line) {
-		echo $line . "<br>";
-	}
+}
+
+exec("python /home/pi/development/mint/seretra/Prediction/append.py" . " " . $imei . " " . $time . " " . $longtitude . " " . $latitude . " 2>&1 &", $out);
+echo "<br>Outputs:<br>";
+foreach($out as $line) {
+	echo $line . "<br>";
 }
 
 ?>
