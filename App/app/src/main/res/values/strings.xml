@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name" translatable="false">Seretra</string>
-    <string name="gps_permission_denied">Bitte erlauben sie den Standort Zugriff, damit wir sie orten können!</string>
-    <string name="gps_permission_user_denied">Wir brauchen die Erlaubnis um sie Orten zu können!</string>
-    <string name="gps_permission_user_accept">GPS Berechtigung aktzeptiert</string>
+    <string name="how_fix_problem">Starten sie die App neu und bestätigen sie alles</string>
+    <string name="no_permissions">Berechtigungen wurden nicht erteil. Seretra funktioniert nicht!</string>
 </resources>

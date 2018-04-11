@@ -7,21 +7,19 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
+import android.telephony.TelephonyManager;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 
 /**
  * Die Klasse ist für die Ortung des Nutzers verantwortlich
@@ -44,11 +42,90 @@ public class gps_service extends Service {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
-            public void onLocationChanged(Location location) {
+            public void onLocationChanged(final Location location) {
                 Intent intent = new Intent("location_update");
                 intent.putExtra("location", location.getLatitude() + ";" + location.getLongitude());
-                sendLocationToServer(location);
+
+                new Thread() {
+                    /**
+                     * Dies Methode sendet die GPS-Daten zur Datenbank
+                     */
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @SuppressLint("HardwareIds")
+                    public void run() {
+                        String getData;
+                        String imei = "";
+
+                        String longtitude = String.valueOf(location.getLongitude());
+                        String latitude = String.valueOf(location.getLatitude());
+
+
+                        String upload_url_String = "http://nivram710.ddns.net/upload.php";
+                        String update_url_String = "http://nivram710.ddns.net/update.php";
+
+                        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                        if (telephonyManager != null) {
+                            imei = telephonyManager.getImei();
+                        }
+
+                        getData = "?longtitude=";
+                        getData += longtitude;
+                        getData += "&latitude=";
+                        getData += latitude;
+                        getData += "&imei=";
+                        getData += imei;
+
+                        try {
+
+                            URL upload_url = new URL(upload_url_String + getData);
+                            URL update_url = new URL(update_url_String + getData);
+
+                            if (isKnown(imei)) {
+                                HttpURLConnection httpURLConnectionUpdate = (HttpURLConnection) update_url.openConnection();
+                                httpURLConnectionUpdate.setDoOutput(true);
+                                httpURLConnectionUpdate.setDoInput(true);
+                                InputStream inputStream = httpURLConnectionUpdate.getInputStream();
+                                inputStream.close();
+                                httpURLConnectionUpdate.disconnect();
+                            } else {
+                                HttpURLConnection httpURLConnectionUpload = (HttpURLConnection) upload_url.openConnection();
+                                httpURLConnectionUpload.setDoOutput(true);
+                                httpURLConnectionUpload.setDoInput(true);
+                                InputStream inputStream = httpURLConnectionUpload.getInputStream();
+                                inputStream.close();
+                                httpURLConnectionUpload.disconnect();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }.start();
                 sendBroadcast(intent);
+            }
+
+            boolean isKnown(String imei) {
+                String result = "";
+                String check_url_String = "http://nivram710.ddns.net/check.php?imei=" + imei;
+
+                try {
+
+                    URL check_url = new URL(check_url_String);
+                    HttpURLConnection httpURLConnectionCheck = (HttpURLConnection) check_url.openConnection();
+                    httpURLConnectionCheck.setDoOutput(true);
+                    httpURLConnectionCheck.setDoInput(true);
+                    InputStream inputStream = httpURLConnectionCheck.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        result = line;
+                    }
+
+                    return result.equals("true");
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return false;
             }
 
             @Override
@@ -72,53 +149,6 @@ public class gps_service extends Service {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
 
     }
-
-    // todo: sendLocationToServer()
-    public void sendLocationToServer(Location location) {
-
-        String longtitude = String.valueOf(location.getLongitude());
-        String latitude = String.valueOf(location.getLatitude());
-        String upload_url_String = "http://nivram710.ddns.net/upload.php";
-        String update_url_String = "http://nivram710.ddns.net/update.php";
-        StringBuilder result = new StringBuilder();
-        String line;
-
-        try {
-            URL upload_url = new URL(upload_url_String);
-            try {
-                HttpURLConnection httpURLConnection = (HttpURLConnection) upload_url.openConnection();
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoOutput(true);
-                httpURLConnection.setDoInput(true);
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UFT-8"));
-                String psot_data = URLEncoder.encode("longtitude", "UTF-8") + "=" + URLEncoder.encode("longtitude", longtitude) + "&"
-                        + URLEncoder.encode("latitude", "UTF-8") + "=" + URLEncoder.encode("latitude", latitude) + "&"
-                        + URLEncoder.encode("imei", "UTF-8") + "=" + URLEncoder.encode("imei", String.valueOf(3));
-                bufferedWriter.write(psot_data);
-                bufferedWriter.flush();
-                bufferedWriter.close();
-                outputStream.close();
-
-                InputStream inputStream = httpURLConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
-                while ((line = bufferedReader.readLine()) != null) {
-                    result.append(line);
-                }
-                bufferedReader.close();
-                inputStream.close();
-                httpURLConnection.disconnect();
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-
-        }
-    }
-
 
     @Override
     public void onDestroy() {
