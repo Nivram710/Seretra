@@ -1,4 +1,14 @@
+# Prediction
 Prediction/.data/*
+
+# Android
+
+# Idea
+**/.idea/workspace.xml
+**/.idea/tasks.xml
+**/.idea/*.iws
+
+# Python
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
