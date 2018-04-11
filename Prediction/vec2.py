@@ -2,6 +2,11 @@ import math
 
 
 class Vec2:
+    def distance(v1, v2):
+        dx = v2.x - v1.x
+        dy = v2.y - v1.y
+        return math.sqrt(dx**2 + dy**2)
+
     def __init__(self, p1, p2, alternate=False):
         if not alternate:
             self.x = p1
