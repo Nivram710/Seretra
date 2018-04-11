@@ -7,4 +7,4 @@ x = sys.argv[3]
 y = sys.argv[4]
 
 with open(".data/" + sys.argv[1], "a") as f:
-    f.write(time + " " + x + " " + y + "\n")
+    f.write(int(time) + " " + float(x) + " " + float(y) + "\n")
