@@ -14,10 +14,8 @@ import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.telephony.TelephonyManager;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -54,78 +52,44 @@ public class gps_service extends Service {
                     @SuppressLint("HardwareIds")
                     public void run() {
                         String getData;
-                        String imei = "";
+                        String imei;
 
                         String longtitude = String.valueOf(location.getLongitude());
                         String latitude = String.valueOf(location.getLatitude());
 
 
                         String upload_url_String = "http://nivram710.ddns.net/upload.php";
-                        String update_url_String = "http://nivram710.ddns.net/update.php";
 
                         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                         if (telephonyManager != null) {
-                            imei = telephonyManager.getImei();
+                           imei = telephonyManager.getImei();
+                        } else {
+                            imei = "0";
                         }
 
-                        getData = "?longtitude=";
+                        getData = "?imei=";
+                        getData += imei;
+                        getData += "&longtitude=";
                         getData += longtitude;
                         getData += "&latitude=";
                         getData += latitude;
-                        getData += "&imei=";
-                        getData += imei;
 
                         try {
 
                             URL upload_url = new URL(upload_url_String + getData);
-                            URL update_url = new URL(update_url_String + getData);
 
-                            if (isKnown(imei)) {
-                                HttpURLConnection httpURLConnectionUpdate = (HttpURLConnection) update_url.openConnection();
-                                httpURLConnectionUpdate.setDoOutput(true);
-                                httpURLConnectionUpdate.setDoInput(true);
-                                InputStream inputStream = httpURLConnectionUpdate.getInputStream();
-                                inputStream.close();
-                                httpURLConnectionUpdate.disconnect();
-                            } else {
                                 HttpURLConnection httpURLConnectionUpload = (HttpURLConnection) upload_url.openConnection();
                                 httpURLConnectionUpload.setDoOutput(true);
                                 httpURLConnectionUpload.setDoInput(true);
                                 InputStream inputStream = httpURLConnectionUpload.getInputStream();
                                 inputStream.close();
                                 httpURLConnectionUpload.disconnect();
-                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                 }.start();
                 sendBroadcast(intent);
-            }
-
-            boolean isKnown(String imei) {
-                String result = "";
-                String check_url_String = "http://nivram710.ddns.net/check.php?imei=" + imei;
-
-                try {
-
-                    URL check_url = new URL(check_url_String);
-                    HttpURLConnection httpURLConnectionCheck = (HttpURLConnection) check_url.openConnection();
-                    httpURLConnectionCheck.setDoOutput(true);
-                    httpURLConnectionCheck.setDoInput(true);
-                    InputStream inputStream = httpURLConnectionCheck.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        result = line;
-                    }
-
-                    return result.equals("true");
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return false;
             }
 
             @Override
@@ -135,7 +99,6 @@ public class gps_service extends Service {
 
             @Override
             public void onProviderEnabled(String s) {
-
             }
 
             @Override
