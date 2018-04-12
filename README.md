@@ -1,13 +1,13 @@
 # Seretra
 
-Der Code von unserem Mint-Projekt
-#
+## Der Code von unserem Mint-Projekt
+
 Von der Schule aus nehmen wir an einem MINT-Wettbewerb teil.
 Ziel des MINT-Wettbewerbes ist es, junge Menschen für den Bereich
 MINT (Mathematik - Informatik - Naturwissenschaften - Technik) zu
 begeistern. Jede teilnehmende Gruppe bekommt ein Unternehmen als
 Pate für technische und finazielle Unterstützung. Unser Pate ist
-das Unternehemen Grunewald GmbH & Co. KG in Bocholt.
+das Unternehmen Grunewald GmbH & Co. KG in Bocholt.
 
 ## Was müssen wir bei diesem Wettbewerb machen?
 Wir sollen uns ein Projekt zum Thema "Safety-First" überlegen und
@@ -27,7 +27,6 @@ Zusätzlich wollen wir das ganze auch als Navigationssystem entwickeln.
 Aber da wir als wichtiger erachten mögliche Unfälle zu verhindern, als
 Menschen durch die Gegend zu Navigieren, ist das ein optinales Ziel von uns.
 
-#
 Wir hoffen, dass unser Projekt die Welt ein wenig sicherer macht!
 
 # Euer Seretra-Team 
