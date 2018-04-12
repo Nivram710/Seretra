@@ -1,6 +1,8 @@
 package de.nivram710.seretra;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -11,18 +13,23 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.provider.SyncStateContract;
 import android.support.annotation.RequiresApi;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Objects;
 
 /**
  * Die Klasse ist für die Ortung des Nutzers verantwortlich
  */
 public class gps_service extends Service {
+
+    String STARTFOREGROUND_ACTION = "com.marothiatechs.foregroundservice.action.startforeground";
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -32,10 +39,17 @@ public class gps_service extends Service {
         return null;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void onCreate() {
+        super.onCreate();
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("MissingPermission")
     @Override
-    public void onCreate() {
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        showNotification();
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -49,7 +63,7 @@ public class gps_service extends Service {
                      * Dies Methode sendet die GPS-Daten zur Datenbank
                      */
                     @RequiresApi(api = Build.VERSION_CODES.O)
-                    @SuppressLint("HardwareIds")
+                    @SuppressLint({"HardwareIds", "MissingPermission"})
                     public void run() {
                         String getData;
                         String imei;
@@ -62,7 +76,7 @@ public class gps_service extends Service {
 
                         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                         if (telephonyManager != null) {
-                           imei = telephonyManager.getImei();
+                            imei = telephonyManager.getImei();
                         } else {
                             imei = "0";
                         }
@@ -78,12 +92,12 @@ public class gps_service extends Service {
 
                             URL upload_url = new URL(upload_url_String + getData);
 
-                                HttpURLConnection httpURLConnectionUpload = (HttpURLConnection) upload_url.openConnection();
-                                httpURLConnectionUpload.setDoOutput(true);
-                                httpURLConnectionUpload.setDoInput(true);
-                                InputStream inputStream = httpURLConnectionUpload.getInputStream();
-                                inputStream.close();
-                                httpURLConnectionUpload.disconnect();
+                            HttpURLConnection httpURLConnectionUpload = (HttpURLConnection) upload_url.openConnection();
+                            httpURLConnectionUpload.setDoOutput(true);
+                            httpURLConnectionUpload.setDoInput(true);
+                            InputStream inputStream = httpURLConnectionUpload.getInputStream();
+                            inputStream.close();
+                            httpURLConnectionUpload.disconnect();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -111,6 +125,24 @@ public class gps_service extends Service {
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
 
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void showNotification() {
+        Log.e("Notification: ", "Show-Notification-Methode");
+        Intent notificationIntent = new Intent(this, gps_service.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+        Notification notification = new Notification.Builder(this)
+                .setContentTitle(getText(R.string.app_name))
+                .setContentText("hallo")
+                .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                .setContentIntent(pendingIntent)
+                .setTicker("Peter")
+                .build();
+
+        startForeground(101, notification);
     }
 
     @Override
