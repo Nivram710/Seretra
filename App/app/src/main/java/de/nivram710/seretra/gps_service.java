@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.provider.SyncStateContract;
 import android.support.annotation.RequiresApi;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -22,14 +21,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Objects;
 
 /**
  * Die Klasse ist für die Ortung des Nutzers verantwortlich
  */
 public class gps_service extends Service {
-
-    String STARTFOREGROUND_ACTION = "com.marothiatechs.foregroundservice.action.startforeground";
 
     private LocationManager locationManager;
     private LocationListener locationListener;
