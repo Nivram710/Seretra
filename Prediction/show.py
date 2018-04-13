@@ -27,6 +27,8 @@ for obj in objects.values():
     xs = list(map(lambda d: d[0].x, obj_interpolated))
     ys = list(map(lambda d: d[0].y, obj_interpolated))
 
+    plt.axis("equal")
     plt.scatter(xs, ys)
+    plt.plot(xs, ys)
 
 plt.show()
