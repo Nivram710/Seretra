@@ -3,7 +3,7 @@ import numpy as np
 from vec2 import Vec2
 import matplotlib.pyplot as plt
 
-debug = True
+debug = False
 
 
 def interpolate(data, stepsize):
@@ -12,8 +12,6 @@ def interpolate(data, stepsize):
     time = [d[1] for d in data]
     steps = len(data) / stepsize
 
-    fx_linear = scipy.interpolate.interp1d(time, x)
-    fy_linear = scipy.interpolate.interp1d(time, y)
     fx_cubic = scipy.interpolate.interp1d(time, x, kind="cubic")
     fy_cubic = scipy.interpolate.interp1d(time, y, kind="cubic")
 
@@ -22,7 +20,6 @@ def interpolate(data, stepsize):
     if debug:
         plt.subplot(221)
         plt.plot(time, x, 'o',
-                 timeNew, fx_linear(timeNew), '-',
                  timeNew, fx_cubic(timeNew), '--')
         plt.xlabel("time")
         plt.ylabel("x")
@@ -31,7 +28,6 @@ def interpolate(data, stepsize):
 
         plt.subplot(222)
         plt.plot(time, y, 'o',
-                 timeNew, fy_linear(timeNew), '-',
                  timeNew, fy_cubic(timeNew), '--')
         plt.xlabel("time")
         plt.ylabel("y")
