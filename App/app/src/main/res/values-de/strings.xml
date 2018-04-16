@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="no_permissions">Berechtigungen wurden nicht erteil. Seretra funktioniert nicht!</string>
     <string name="how_fix_problem">Starten sie die App neu und bestätigen sie alles</string>
+    <string name="no_permissions">Berechtigungen wurden nicht erteilt. Seretra funktioniert nicht!</string>
+    <string name="notification_text">achtet auf sie auf ...</string>
+    <string name="notification_channel_name">Status</string>
+    <string name="toast_settings_location">Seretra braucht ihren Standort um sie zu schützen</string>
 </resources>

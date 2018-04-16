@@ -2,7 +2,8 @@ package de.nivram710.seretra;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
-import android.app.PendingIntent;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +16,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.telephony.TelephonyManager;
-import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +30,7 @@ public class gps_service extends Service {
 
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private String status_channel_id = "StatusChannel";
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -116,29 +118,45 @@ public class gps_service extends Service {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                Toast.makeText(gps_service.this, getText(R.string.toast_settings_location), Toast.LENGTH_LONG).show();
             }
         };
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
 
         return super.onStartCommand(intent, flags, startId);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void showNotification() {
-        Log.e("Notification: ", "Show-Notification-Methode");
-        Intent notificationIntent = new Intent(this, gps_service.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        int status_id = 101;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel statusChannel = new NotificationChannel(status_channel_id, getText(R.string.notification_channel_name), NotificationManager.IMPORTANCE_DEFAULT);
 
-        Notification notification = new Notification.Builder(this)
-                .setContentTitle(getText(R.string.app_name))
-                .setContentText("hallo")
-                .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
-                .setContentIntent(pendingIntent)
-                .setTicker("Peter")
-                .build();
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(statusChannel);
+            }
+        }
 
-        startForeground(101, notification);
+        startForeground(status_id, createNotification(getText(R.string.app_name), getText(R.string.notification_text), R.drawable.common_google_signin_btn_icon_dark));
+    }
+
+    private Notification createNotification(CharSequence title, CharSequence text, int icon) {
+        Notification notification;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notification = new Notification.Builder(this, status_channel_id)
+                    .setContentTitle(title)
+                    .setContentText(text)
+                    .setSmallIcon(icon)
+                    .setChannelId(status_channel_id)
+                    .build();
+        } else {
+            notification = new Notification();
+            notification.tickerText = text;
+            notification.icon = icon;
+        }
+        return notification;
     }
 
     @Override
