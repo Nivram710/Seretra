@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -149,6 +150,8 @@ public class gps_service extends Service {
                     .setContentTitle(title)
                     .setContentText(text)
                     .setSmallIcon(icon)
+                    .setColorized(true)
+                    .setColor(Color.argb(0, 0, 125, 160))
                     .setChannelId(status_channel_id)
                     .build();
         } else {
