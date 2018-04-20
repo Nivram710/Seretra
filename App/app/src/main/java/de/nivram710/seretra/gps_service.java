@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
@@ -24,14 +26,19 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import de.nivram710.seretra.notificationServices.pauseLocationListenerService;
+import de.nivram710.seretra.notificationServices.startLocationListenerService;
+import de.nivram710.seretra.notificationServices.stopLocationListenerService;
+
 /**
  * Die Klasse ist für die Ortung des Nutzers verantwortlich
  */
 public class gps_service extends Service {
 
-    private LocationManager locationManager;
-    private LocationListener locationListener;
+    private static LocationManager locationManager;
+    private static LocationListener locationListener;
     private String status_channel_id = "StatusChannel";
+    private static boolean pause = false;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -144,27 +151,68 @@ public class gps_service extends Service {
     }
 
     private Notification createNotification(CharSequence title, CharSequence text, int icon) {
-        Notification notification;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notification = new Notification.Builder(this, status_channel_id)
-                    .setContentTitle(title)
-                    .setContentText(text)
-                    .setSmallIcon(icon)
-                    .setColorized(true)
-                    .setColor(Color.argb(0, 0, 125, 160))
-                    .setChannelId(status_channel_id)
-                    .build();
-        } else {
-            notification = new Notification();
-            notification.tickerText = text;
-            notification.icon = icon;
+
+            Intent startLocationListenerIntent = new Intent(getApplicationContext(), startLocationListenerService.class);
+            PendingIntent startLocationListenerPendingIntent = PendingIntent.getService(this, 0, startLocationListenerIntent, 0);
+            NotificationCompat.Action startAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, "Start", startLocationListenerPendingIntent);
+
+            Intent stopLocationListenerIntent = new Intent(getApplicationContext(), stopLocationListenerService.class);
+            PendingIntent stopLocationListenerPendingIntent = PendingIntent.getService(this, 0, stopLocationListenerIntent, 0);
+            NotificationCompat.Action stopAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, "Stop", stopLocationListenerPendingIntent);
+
+            Intent pauseLocationListenerIntent = new Intent(getApplicationContext(), pauseLocationListenerService.class);
+            PendingIntent pauseLocationListenerPendingIntent = PendingIntent.getService(this, 0, pauseLocationListenerIntent, 0);
+            NotificationCompat.Action pauseAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, "Pause", pauseLocationListenerPendingIntent);
+
+            if (pause) {
+                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, status_channel_id)
+                        .setContentTitle(title)
+                        .setContentText(text)
+                        .setSmallIcon(icon)
+                        .setColorized(true)
+                        .setColor(Color.argb(0, 0, 125, 160))
+                        .setChannelId(status_channel_id)
+                        .addAction(stopAction)
+                        .addAction(startAction);
+
+                return notificationBuilder.build();
+            } else {
+                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, status_channel_id)
+                        .setContentTitle(title)
+                        .setContentText(text)
+                        .setSmallIcon(icon)
+                        .setColorized(true)
+                        .setColor(Color.argb(0, 0, 125, 160))
+                        .setChannelId(status_channel_id)
+                        .addAction(stopAction)
+                        .addAction(pauseAction);
+
+                return notificationBuilder.build();
+            }
         }
-        return notification;
+        return null;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         if (locationManager != null) locationManager.removeUpdates(locationListener);
+    }
+
+    public static LocationManager getLocationManager() {
+        return locationManager;
+    }
+
+    public static LocationListener getLocationListener() {
+        return locationListener;
+    }
+
+    public static void setPause(boolean value) {
+        pause = value;
+    }
+
+    public static boolean getPause() {
+        return pause;
     }
 }

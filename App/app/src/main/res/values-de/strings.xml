@@ -5,4 +5,5 @@
     <string name="notification_text">achtet auf sie auf ...</string>
     <string name="notification_channel_name">Status</string>
     <string name="toast_settings_location">Seretra braucht ihren Standort um sie zu schützen</string>
+    <string name="toast_warning_pause">Denken Sie daran, die App wieder auf Start zu drücken.</string>
 </resources>
