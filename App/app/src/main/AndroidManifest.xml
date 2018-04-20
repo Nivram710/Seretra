@@ -23,6 +23,9 @@
         </activity>
 
         <service android:name=".gps_service"/>
+        <service android:name=".notificationServices.startLocationListenerService"/>
+        <service android:name=".notificationServices.stopLocationListenerService"/>
+        <service android:name=".notificationServices.pauseLocationListenerService"/>
     </application>
 
 </manifest>
