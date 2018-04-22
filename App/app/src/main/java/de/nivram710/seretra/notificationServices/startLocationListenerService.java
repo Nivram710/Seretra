@@ -33,7 +33,7 @@ public class startLocationListenerService extends Service {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, gps_service.getMinTimeGPS(), gps_service.getMinDistanceGPS(), locationListener);
 
         gps_service.setPause(false);
-        startForeground(101, createNotification(getText(R.string.app_name), getText(R.string.notification_text), R.drawable.common_google_signin_btn_icon_dark));
+        startForeground(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text), R.drawable.common_google_signin_btn_icon_dark));
 
         this.stopSelf();
         return super.onStartCommand(intent, flags, startId);
