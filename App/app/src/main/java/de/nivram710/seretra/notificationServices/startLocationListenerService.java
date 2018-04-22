@@ -30,7 +30,7 @@ public class startLocationListenerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         LocationManager locationManager = gps_service.getLocationManager();
         LocationListener locationListener = gps_service.getLocationListener();
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, gps_service.getMinTimeGPS(), gps_service.getMinDistanceGPS(), locationListener);
 
         gps_service.setPause(false);
         startForeground(101, createNotification(getText(R.string.app_name), getText(R.string.notification_text), R.drawable.common_google_signin_btn_icon_dark));

@@ -39,6 +39,8 @@ public class gps_service extends Service {
     private static LocationListener locationListener;
     private String status_channel_id = "StatusChannel";
     private static boolean pause = false;
+    private static int minTimeGPS = 1000;
+    private static int minDistanceGPS = 5;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -130,7 +132,7 @@ public class gps_service extends Service {
             }
         };
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTimeGPS, minDistanceGPS, locationListener);
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -214,5 +216,13 @@ public class gps_service extends Service {
 
     public static boolean getPause() {
         return pause;
+    }
+
+    public static int getMinTimeGPS(){
+        return minTimeGPS;
+    }
+
+    public static int getMinDistanceGPS() {
+        return minDistanceGPS;
     }
 }
