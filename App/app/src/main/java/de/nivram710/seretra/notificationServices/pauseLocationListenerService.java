@@ -31,7 +31,7 @@ public class pauseLocationListenerService extends Service {
         locationManager.removeUpdates(locationListener);
 
         gps_service.setPause(true);
-        startForeground(101, createNotification(getText(R.string.app_name), getText(R.string.notification_text), R.drawable.common_google_signin_btn_icon_dark));
+        startForeground(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text), R.mipmap.ic_launcher_foreground));
 
         this.stopSelf();
         return super.onStartCommand(intent, flags, startId);
