@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 import de.nivram710.seretra.R;
 import de.nivram710.seretra.gps_service;
@@ -31,10 +32,17 @@ public class startLocationListenerService extends Service {
         LocationListener locationListener = gps_service.getLocationListener();
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
 
+        gps_service.setPause(false);
         startForeground(101, createNotification(getText(R.string.app_name), getText(R.string.notification_text), R.drawable.common_google_signin_btn_icon_dark));
 
-        gps_service.setPause(false);
+        this.stopSelf();
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+        Toast.makeText(getApplicationContext(), getText(R.string.toast_information_start), Toast.LENGTH_LONG).show();
+        super.onDestroy();
     }
 
     private Notification createNotification(CharSequence title, CharSequence text, int icon) {

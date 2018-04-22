@@ -30,17 +30,16 @@ public class pauseLocationListenerService extends Service {
         LocationListener locationListener = gps_service.getLocationListener();
         locationManager.removeUpdates(locationListener);
 
+        gps_service.setPause(true);
         startForeground(101, createNotification(getText(R.string.app_name), getText(R.string.notification_text), R.drawable.common_google_signin_btn_icon_dark));
 
-        gps_service.setPause(true);
         this.stopSelf();
         return super.onStartCommand(intent, flags, startId);
     }
 
-    @SuppressLint("ShowToast")
     @Override
     public void onDestroy() {
-        Toast.makeText(getApplicationContext(), getText(R.string.toast_warning_pause), Toast.LENGTH_LONG);
+        Toast.makeText(getApplicationContext(), getText(R.string.toast_warning_pause), Toast.LENGTH_LONG).show();
         super.onDestroy();
     }
 

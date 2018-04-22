@@ -48,6 +48,7 @@ public class gps_service extends Service {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void onCreate() {
         super.onCreate();
+        showNotification();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -55,7 +56,6 @@ public class gps_service extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        showNotification();
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
