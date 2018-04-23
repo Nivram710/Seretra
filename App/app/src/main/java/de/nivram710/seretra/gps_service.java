@@ -150,7 +150,7 @@ public class gps_service extends Service {
             }
         }
 
-        startForeground(status_id, createNotification(getText(R.string.app_name), getText(R.string.notification_text), R.mipmap.ic_launcher_round));
+        startForeground(status_id, createNotification(getText(R.string.app_name), getText(R.string.notification_text), R.drawable.notification_icon));
     }
 
     private Notification createNotification(CharSequence title, CharSequence text, int icon) {

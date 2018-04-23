@@ -8,4 +8,7 @@
     <string name="toast_warning_pause">Denken Sie daran, die App wieder zu starten</string>
     <string name="toast_information_start">Seretra wieder aktiv</string>
     <string name="toast_warning_stop">Seretra wird angehalten. Sie müssen die App manuell neustarten!</string>
+    <string name="notification_button_start">Start</string>
+    <string name="notification_button_stop">Stop</string>
+    <string name="notification_button_pause">Pause</string>
 </resources>
