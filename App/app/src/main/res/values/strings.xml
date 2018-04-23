@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">Seretra</string>
     <string name="how_fix_problem">Starten Sie die App neu und geben Sie uns die Berechtigungen</string>
     <string name="no_permissions">Berechtigungen wurden nicht erteilt. Seretra funktioniert nicht!</string>
-    <string name="notification_text">Passt auf</string>
+    <string name="notification_text_start">Passt auf</string>
     <string name="notification_channel_name">Status</string>
     <string name="toast_settings_location">Seretra braucht ihren Standort um sie zu schützen</string>
     <string name="toast_warning_pause">Denken Sie daran, die App wieder zu starten</string>
@@ -11,4 +11,5 @@
     <string name="notification_button_start">Start</string>
     <string name="notification_button_stop">Stop</string>
     <string name="notification_button_pause">Pause</string>
+    <string name="notification_text_pause">ist pausiert!</string>
 </resources>

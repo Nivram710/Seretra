@@ -2,8 +2,10 @@ package de.nivram710.seretra.notificationServices;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.LocationListener;
@@ -31,8 +33,14 @@ public class pauseLocationListenerService extends Service {
         locationManager.removeUpdates(locationListener);
 
         gps_service.setPause(true);
-        startForeground(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text), R.drawable.notification_icon));
-
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+            startForeground(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_pause), R.drawable.notification_icon));
+        } else {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notificationManager != null) {
+                notificationManager.notify(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_pause), R.drawable.notification_icon));
+            }
+        }
         this.stopSelf();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -48,11 +56,11 @@ public class pauseLocationListenerService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Intent startLocationListenerIntent = new Intent(getApplicationContext(), startLocationListenerService.class);
             PendingIntent startLocationListenerPendingIntent = PendingIntent.getService(this, 0, startLocationListenerIntent, 0);
-            NotificationCompat.Action startAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, getText(R.string.notification_button_start), startLocationListenerPendingIntent);
+            NotificationCompat.Action startAction = new NotificationCompat.Action(R.drawable.notification_start_location_listener, getText(R.string.notification_button_start), startLocationListenerPendingIntent);
 
             Intent stopLocationListenerIntent = new Intent(getApplicationContext(), stopLocationListenerService.class);
             PendingIntent stopLocationListenerPendingIntent = PendingIntent.getService(this, 0, stopLocationListenerIntent, 0);
-            NotificationCompat.Action stopAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, getText(R.string.notification_button_stop), stopLocationListenerPendingIntent);
+            NotificationCompat.Action stopAction = new NotificationCompat.Action(R.drawable.notification_stop_location_listener, getText(R.string.notification_button_stop), stopLocationListenerPendingIntent);
 
             Intent pauseLocationListenerIntent = new Intent(getApplicationContext(), pauseLocationListenerService.class);
             PendingIntent pauseLocationListenerPendingIntent = PendingIntent.getService(this, 0, pauseLocationListenerIntent, 0);
