@@ -150,18 +150,18 @@ public class gps_service extends Service {
             }
         }
 
-        startForeground(status_id, createNotification(getText(R.string.app_name), getText(R.string.notification_text), R.drawable.notification_icon));
+        startForeground(status_id, createNotification(getText(R.string.app_name), getText(R.string.notification_text_start), R.drawable.notification_icon));
     }
 
     private Notification createNotification(CharSequence title, CharSequence text, int icon) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Intent startLocationListenerIntent = new Intent(getApplicationContext(), startLocationListenerService.class);
                 PendingIntent startLocationListenerPendingIntent = PendingIntent.getService(this, 0, startLocationListenerIntent, 0);
-                NotificationCompat.Action startAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, "Start", startLocationListenerPendingIntent);
+                NotificationCompat.Action startAction = new NotificationCompat.Action(R.drawable.notification_start_location_listener, "Start", startLocationListenerPendingIntent);
 
                 Intent stopLocationListenerIntent = new Intent(getApplicationContext(), stopLocationListenerService.class);
                 PendingIntent stopLocationListenerPendingIntent = PendingIntent.getService(this, 0, stopLocationListenerIntent, 0);
-                NotificationCompat.Action stopAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, "Stop", stopLocationListenerPendingIntent);
+                NotificationCompat.Action stopAction = new NotificationCompat.Action(R.drawable.notification_stop_location_listener, "Stop", stopLocationListenerPendingIntent);
 
                 Intent pauseLocationListenerIntent = new Intent(getApplicationContext(), pauseLocationListenerService.class);
                 PendingIntent pauseLocationListenerPendingIntent = PendingIntent.getService(this, 0, pauseLocationListenerIntent, 0);
