@@ -44,8 +44,8 @@ public class pauseLocationListenerService extends Service {
     }
 
     private Notification createNotification(CharSequence title, CharSequence text, int icon) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
+        String status_channel_id = "StatusChannel";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Intent startLocationListenerIntent = new Intent(getApplicationContext(), startLocationListenerService.class);
             PendingIntent startLocationListenerPendingIntent = PendingIntent.getService(this, 0, startLocationListenerIntent, 0);
             NotificationCompat.Action startAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, "Start", startLocationListenerPendingIntent);
@@ -57,8 +57,6 @@ public class pauseLocationListenerService extends Service {
             Intent pauseLocationListenerIntent = new Intent(getApplicationContext(), pauseLocationListenerService.class);
             PendingIntent pauseLocationListenerPendingIntent = PendingIntent.getService(this, 0, pauseLocationListenerIntent, 0);
             NotificationCompat.Action pauseAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, "Pause", pauseLocationListenerPendingIntent);
-
-            String status_channel_id = "StatusChannel";
             if (gps_service.getPause()) {
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, status_channel_id)
                         .setContentTitle(title)
@@ -66,9 +64,12 @@ public class pauseLocationListenerService extends Service {
                         .setSmallIcon(icon)
                         .setColorized(true)
                         .setColor(Color.argb(0, 0, 125, 160))
-                        .setChannelId(status_channel_id)
                         .addAction(stopAction)
                         .addAction(startAction);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    notificationBuilder.setChannelId(status_channel_id);
+                }
 
                 return notificationBuilder.build();
             } else {
@@ -78,9 +79,12 @@ public class pauseLocationListenerService extends Service {
                         .setSmallIcon(icon)
                         .setColorized(true)
                         .setColor(Color.argb(0, 0, 125, 160))
-                        .setChannelId(status_channel_id)
                         .addAction(stopAction)
                         .addAction(pauseAction);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    notificationBuilder.setChannelId(status_channel_id);
+                }
 
                 return notificationBuilder.build();
             }
