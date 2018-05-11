@@ -2,8 +2,10 @@ package de.nivram710.seretra.notificationServices;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.LocationListener;
@@ -30,11 +32,17 @@ public class startLocationListenerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         LocationManager locationManager = gps_service.getLocationManager();
         LocationListener locationListener = gps_service.getLocationListener();
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, gps_service.getMinTimeGPS(), gps_service.getMinDistanceGPS(), locationListener);
 
         gps_service.setPause(false);
-        startForeground(101, createNotification(getText(R.string.app_name), getText(R.string.notification_text), R.drawable.common_google_signin_btn_icon_dark));
-
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+            startForeground(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_start), R.drawable.notification_icon));
+        } else {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notificationManager != null) {
+                notificationManager.notify(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_start), R.drawable.notification_icon));
+            }
+        }
         this.stopSelf();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -46,21 +54,19 @@ public class startLocationListenerService extends Service {
     }
 
     private Notification createNotification(CharSequence title, CharSequence text, int icon) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
+        String status_channel_id = "StatusChannel";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Intent startLocationListenerIntent = new Intent(getApplicationContext(), startLocationListenerService.class);
             PendingIntent startLocationListenerPendingIntent = PendingIntent.getService(this, 0, startLocationListenerIntent, 0);
-            NotificationCompat.Action startAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, "Start", startLocationListenerPendingIntent);
+            NotificationCompat.Action startAction = new NotificationCompat.Action(R.drawable.notification_start_location_listener, getText(R.string.notification_button_start), startLocationListenerPendingIntent);
 
             Intent stopLocationListenerIntent = new Intent(getApplicationContext(), stopLocationListenerService.class);
             PendingIntent stopLocationListenerPendingIntent = PendingIntent.getService(this, 0, stopLocationListenerIntent, 0);
-            NotificationCompat.Action stopAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, "Stop", stopLocationListenerPendingIntent);
+            NotificationCompat.Action stopAction = new NotificationCompat.Action(R.drawable.notification_stop_location_listener, getText(R.string.notification_button_stop), stopLocationListenerPendingIntent);
 
             Intent pauseLocationListenerIntent = new Intent(getApplicationContext(), pauseLocationListenerService.class);
             PendingIntent pauseLocationListenerPendingIntent = PendingIntent.getService(this, 0, pauseLocationListenerIntent, 0);
-            NotificationCompat.Action pauseAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, "Pause", pauseLocationListenerPendingIntent);
-
-            String status_channel_id = "StatusChannel";
+            NotificationCompat.Action pauseAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, getText(R.string.notification_button_pause), pauseLocationListenerPendingIntent);
             if (gps_service.getPause()) {
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, status_channel_id)
                         .setContentTitle(title)
@@ -68,9 +74,12 @@ public class startLocationListenerService extends Service {
                         .setSmallIcon(icon)
                         .setColorized(true)
                         .setColor(Color.argb(0, 0, 125, 160))
-                        .setChannelId(status_channel_id)
                         .addAction(stopAction)
                         .addAction(startAction);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    notificationBuilder.setChannelId(status_channel_id);
+                }
 
                 return notificationBuilder.build();
             } else {
@@ -80,9 +89,12 @@ public class startLocationListenerService extends Service {
                         .setSmallIcon(icon)
                         .setColorized(true)
                         .setColor(Color.argb(0, 0, 125, 160))
-                        .setChannelId(status_channel_id)
                         .addAction(stopAction)
                         .addAction(pauseAction);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    notificationBuilder.setChannelId(status_channel_id);
+                }
 
                 return notificationBuilder.build();
             }

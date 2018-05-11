@@ -39,6 +39,9 @@ public class gps_service extends Service {
     private static LocationListener locationListener;
     private String status_channel_id = "StatusChannel";
     private static boolean pause = false;
+    private static int foregroundID = 101;
+    private static int minTimeGPS = 1000;
+    private static int minDistanceGPS = 5;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -130,7 +133,7 @@ public class gps_service extends Service {
             }
         };
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTimeGPS, minDistanceGPS, locationListener);
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -147,50 +150,54 @@ public class gps_service extends Service {
             }
         }
 
-        startForeground(status_id, createNotification(getText(R.string.app_name), getText(R.string.notification_text), R.drawable.common_google_signin_btn_icon_dark));
+        startForeground(status_id, createNotification(getText(R.string.app_name), getText(R.string.notification_text_start), R.drawable.notification_icon));
     }
 
     private Notification createNotification(CharSequence title, CharSequence text, int icon) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Intent startLocationListenerIntent = new Intent(getApplicationContext(), startLocationListenerService.class);
+                PendingIntent startLocationListenerPendingIntent = PendingIntent.getService(this, 0, startLocationListenerIntent, 0);
+                NotificationCompat.Action startAction = new NotificationCompat.Action(R.drawable.notification_start_location_listener, "Start", startLocationListenerPendingIntent);
 
-            Intent startLocationListenerIntent = new Intent(getApplicationContext(), startLocationListenerService.class);
-            PendingIntent startLocationListenerPendingIntent = PendingIntent.getService(this, 0, startLocationListenerIntent, 0);
-            NotificationCompat.Action startAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, "Start", startLocationListenerPendingIntent);
+                Intent stopLocationListenerIntent = new Intent(getApplicationContext(), stopLocationListenerService.class);
+                PendingIntent stopLocationListenerPendingIntent = PendingIntent.getService(this, 0, stopLocationListenerIntent, 0);
+                NotificationCompat.Action stopAction = new NotificationCompat.Action(R.drawable.notification_stop_location_listener, "Stop", stopLocationListenerPendingIntent);
 
-            Intent stopLocationListenerIntent = new Intent(getApplicationContext(), stopLocationListenerService.class);
-            PendingIntent stopLocationListenerPendingIntent = PendingIntent.getService(this, 0, stopLocationListenerIntent, 0);
-            NotificationCompat.Action stopAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, "Stop", stopLocationListenerPendingIntent);
+                Intent pauseLocationListenerIntent = new Intent(getApplicationContext(), pauseLocationListenerService.class);
+                PendingIntent pauseLocationListenerPendingIntent = PendingIntent.getService(this, 0, pauseLocationListenerIntent, 0);
+                NotificationCompat.Action pauseAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, "Pause", pauseLocationListenerPendingIntent);
+                if (pause) {
+                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, status_channel_id)
+                            .setContentTitle(title)
+                            .setContentText(text)
+                            .setSmallIcon(icon)
+                            .setColorized(true)
+                            .setColor(Color.argb(0, 0, 125, 160))
+                            .addAction(stopAction)
+                            .addAction(startAction);
 
-            Intent pauseLocationListenerIntent = new Intent(getApplicationContext(), pauseLocationListenerService.class);
-            PendingIntent pauseLocationListenerPendingIntent = PendingIntent.getService(this, 0, pauseLocationListenerIntent, 0);
-            NotificationCompat.Action pauseAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, "Pause", pauseLocationListenerPendingIntent);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            notificationBuilder.setChannelId(status_channel_id);
+                        }
 
-            if (pause) {
-                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, status_channel_id)
-                        .setContentTitle(title)
-                        .setContentText(text)
-                        .setSmallIcon(icon)
-                        .setColorized(true)
-                        .setColor(Color.argb(0, 0, 125, 160))
-                        .setChannelId(status_channel_id)
-                        .addAction(stopAction)
-                        .addAction(startAction);
+                    return notificationBuilder.build();
+                } else {
+                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, status_channel_id)
+                            .setContentTitle(title)
+                            .setContentText(text)
+                            .setSmallIcon(icon)
+                            .setColorized(true)
+                            .setColor(Color.argb(0, 0, 125, 160))
+                            .addAction(stopAction)
+                            .addAction(pauseAction);
 
-                return notificationBuilder.build();
-            } else {
-                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, status_channel_id)
-                        .setContentTitle(title)
-                        .setContentText(text)
-                        .setSmallIcon(icon)
-                        .setColorized(true)
-                        .setColor(Color.argb(0, 0, 125, 160))
-                        .setChannelId(status_channel_id)
-                        .addAction(stopAction)
-                        .addAction(pauseAction);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        notificationBuilder.setChannelId(status_channel_id);
+                    }
 
-                return notificationBuilder.build();
+                    return notificationBuilder.build();
+                }
             }
-        }
         return null;
     }
 
@@ -214,5 +221,17 @@ public class gps_service extends Service {
 
     public static boolean getPause() {
         return pause;
+    }
+
+    public static int getMinTimeGPS(){
+        return minTimeGPS;
+    }
+
+    public static int getMinDistanceGPS() {
+        return minDistanceGPS;
+    }
+
+    public static int getForegroundID() {
+        return foregroundID;
     }
 }

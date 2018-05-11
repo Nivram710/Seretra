@@ -25,6 +25,8 @@ public class stopLocationListenerService extends Service {
         this.stopService(gpsServiceIntent);
         this.onTaskRemoved(mainActivityIntent);
 
+        android.os.Process.killProcess(android.os.Process.myPid());
+
         this.stopSelf();
         return super.onStartCommand(intent, flags, startId);
     }
