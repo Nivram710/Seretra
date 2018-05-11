@@ -90,23 +90,20 @@ public class gps_service extends Service {
                             imei = "0";
                         }
 
-                        getData = "?imei=";
-                        getData += imei;
-                        getData += "&longtitude=";
-                        getData += longtitude;
-                        getData += "&latitude=";
-                        getData += latitude;
+                        getData = "?imei=" + imei;
+                        getData += "&longtitude=" + longtitude;
+                        getData += "&latitude=" + latitude;
 
                         try {
+                            URL url = new URL(upload_url_String + getData);
 
-                            URL upload_url = new URL(upload_url_String + getData);
-
-                            HttpURLConnection httpURLConnectionUpload = (HttpURLConnection) upload_url.openConnection();
-                            httpURLConnectionUpload.setDoOutput(true);
-                            httpURLConnectionUpload.setDoInput(true);
-                            InputStream inputStream = httpURLConnectionUpload.getInputStream();
-                            inputStream.close();
-                            httpURLConnectionUpload.disconnect();
+                            InputStream response = new URL(url).openStream();
+                            String responseBody = scanner.useDelimiter("\\A").next();
+                            
+                            Toast.makeText(gps_service.this, responseBody, Toast.LENGTH_LONG).show();
+                            System.out.println(responseBody);
+                        }
+                            response.close();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
