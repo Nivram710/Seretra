@@ -19,12 +19,14 @@ import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Scanner;
 
 import de.nivram710.seretra.notificationServices.pauseLocationListenerService;
 import de.nivram710.seretra.notificationServices.startLocationListenerService;
@@ -40,8 +42,8 @@ public class gps_service extends Service {
     private String status_channel_id = "StatusChannel";
     private static boolean pause = false;
     private static int foregroundID = 101;
-    private static int minTimeGPS = 1000;
-    private static int minDistanceGPS = 5;
+    private static int minTimeGPS = 0;
+    private static int minDistanceGPS = 0;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -74,7 +76,6 @@ public class gps_service extends Service {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @SuppressLint({"HardwareIds", "MissingPermission"})
                     public void run() {
-                        String getData;
                         String imei;
 
                         String longtitude = String.valueOf(location.getLongitude());
@@ -87,22 +88,24 @@ public class gps_service extends Service {
                         if (telephonyManager != null) {
                             imei = telephonyManager.getImei();
                         } else {
-                            imei = "0";
+                            imei = "-1";
                         }
 
-                        getData = "?imei=" + imei;
-                        getData += "&longtitude=" + longtitude;
-                        getData += "&latitude=" + latitude;
+                        String data;
+                        data = "?imei=" + imei;
+                        data += "&longtitude=" + longtitude;
+                        data += "&latitude=" + latitude;
 
                         try {
-                            URL url = new URL(upload_url_String + getData);
+                            InputStream response = new URL(upload_url_String+data).openStream();
+                            String responseBody = new Scanner(response).useDelimiter("\\A").next();
 
-                            InputStream response = new URL(url).openStream();
-                            String responseBody = scanner.useDelimiter("\\A").next();
-                            
-                            Toast.makeText(gps_service.this, responseBody, Toast.LENGTH_LONG).show();
-                            System.out.println(responseBody);
-                        }
+                            if(!responseBody.equals("-1")) {
+                                Log.e("gps_service", responseBody);
+                            } else {
+                                Log.e("gps_service", responseBody);
+                            }
+
                             response.close();
                         } catch (IOException e) {
                             e.printStackTrace();
