@@ -44,22 +44,40 @@ def applyWeights(data, weights):
     return weighted_data
 
 
-def predict(data, timeStep):
-    data = interpolate(data, timeStep)
-    positions = list(map(lambda d: d[0], data))
-    times = list(map(lambda d: d[1], data))
+def predict(data, time_step, times=1):
+    # TODO: Should we interpolate each time?
+    data = interpolate(data, time_step)
+    results = []
+    for i in range(times):
+        positions = list(map(lambda d: d[0], data))
+        times = list(map(lambda d: d[1], data))
 
-    # Get information about the positions
-    movements, angles, _, _ = unpack(positions)
+        # Get information about the positions
+        movements, angles, _, _ = unpack(positions)
 
-    # Use average rotation of last movements and the current speed for the next
-    # position
-    predicted_movement = Vec2(sum(applyWeights(movements,
-                                               ROTATION_PREDICTION_WEIGHTS),
-                                  Vec2(0, 0)).getAngle(),
-                              movements[-1].getMagnitude())
-    # Dampen rotation
-    predicted_movement = predicted_movement.rotated(
-            -predicted_movement.getAngle() * 0.95)
+        # Use weighted average rotation of last movements and the current speed
+        # for the next position
+        predicted_angle = sum(applyWeights(
+                movements, ROTATION_PREDICTION_WEIGHTS),
+                Vec2(0, 0)).getAngle()
 
-    return pack(predicted_movement, angles, positions), times[-1] + timeStep
+        predicted_magnitude = movements[-1].getMagnitude()
+
+        predicted_movement = Vec2(predicted_angle,
+                                  predicted_magnitude,
+                                  True)
+
+        print("previous magnitude:", movements[-1].getMagnitude())
+        print("current  magnitude:", predicted_magnitude)
+
+        # Dampen rotation
+        predicted_movement = predicted_movement.rotated(
+                -predicted_movement.getAngle() * 0.95)
+
+        position = (pack(predicted_movement, angles, positions),
+                    times[-1] + time_step)
+
+        data.append(position)
+        results.append(position)
+
+    return results
