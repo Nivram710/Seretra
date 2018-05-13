@@ -1,5 +1,4 @@
 <?php
-
 $debug = false;
 $imei = $_GET["imei"];
 $longitude = $_GET["longtitude"];
@@ -12,12 +11,11 @@ exec("python /home/pi/development/mint/seretra/Prediction/append.py"
   . " " . $time
   . " " . $longitude
   . " " . $latitude
-  . " 2>&1 &", $out);
+  . " 2>&1 &");
 
 if(file_exists('.danger/'.$imei) {
   readfile('.danger/'.$imei);
 } else {
   echo null;
 }
-
 ?>
