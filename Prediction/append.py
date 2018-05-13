@@ -1,4 +1,7 @@
 import sys
+import os
+
+max_datapoints = 15
 
 assert len(sys.argv) == 5
 
@@ -14,3 +17,6 @@ path = ".data/" + sys.argv[1]
 
 with open(path, "a") as f:
     f.write(time + " " + x + " " + y + "\n")
+
+os.system("tail -n " + max_datapoints + " " + path + " > " + ".data/temp")
+os.system("mv .data/temp " + path)
