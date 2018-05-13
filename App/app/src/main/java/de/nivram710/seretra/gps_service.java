@@ -39,7 +39,6 @@ public class gps_service extends Service {
     private static LocationListener locationListener;
     private String status_channel_id = "StatusChannel";
     private static boolean pause = false;
-    private static int foregroundID = 101;
     private static int minTimeGPS = 1000;
     private static int minDistanceGPS = 5;
 
@@ -232,6 +231,6 @@ public class gps_service extends Service {
     }
 
     public static int getForegroundID() {
-        return foregroundID;
+        return 101;
     }
 }

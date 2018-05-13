@@ -60,7 +60,7 @@ class Vec2:
         return Vec2(x, y)
 
     def __repr__(self):
-        return f"Vec2({self.x}, {self.y})"
+        return "Vec2({}, {})".format(self.x, self.y)
 
     def toList(self):
         return [self.x, self.y]

@@ -3,7 +3,7 @@ from predict import predict
 from read import read_data
 from show import show
 
-danger_path = ".danger/"
+danger_path = "/var/www/html/.danger/"
 
 objects = read_data()
 keys = list(objects.keys())
