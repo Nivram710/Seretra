@@ -30,6 +30,8 @@ import de.nivram710.seretra.notificationServices.pauseLocationListenerService;
 import de.nivram710.seretra.notificationServices.startLocationListenerService;
 import de.nivram710.seretra.notificationServices.stopLocationListenerService;
 
+// todo: Doc Comment bei allen Klassen
+
 /**
  * Die Klasse ist für die Ortung des Nutzers verantwortlich
  */
@@ -41,6 +43,7 @@ public class gps_service extends Service {
     private static boolean pause = false;
     private static int minTimeGPS = 1000;
     private static int minDistanceGPS = 5;
+    private static int vibrationDurration = 2000;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -100,7 +103,7 @@ public class gps_service extends Service {
                             if(responseBody.equals("-1")) {
                                 Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(VIBRATOR_SERVICE);
                                 if(vibrator != null) {
-                                    vibrator.vibrate(2000);
+                                    vibrator.vibrate(vibrationDurration);
                                 }
 
                             }
