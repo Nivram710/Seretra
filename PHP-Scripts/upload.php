@@ -14,8 +14,10 @@ exec("python /home/pi/development/mint/seretra/Prediction/append.py"
   . " " . $latitude
   . " 2>&1 &", $out);
 
-foreach($out as $line) {
-	echo $line . "<br>";
+if(file_exists('.danger/'.$imei) {
+  readfile('.danger/'.$imei);
+} else {
+  echo null;
 }
 
 ?>
