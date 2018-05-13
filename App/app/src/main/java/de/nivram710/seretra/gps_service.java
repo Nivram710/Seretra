@@ -1,7 +1,6 @@
 package de.nivram710.seretra;
 
 import android.annotation.SuppressLint;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -15,6 +14,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
@@ -23,8 +23,8 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Scanner;
 
 import de.nivram710.seretra.notificationServices.pauseLocationListenerService;
 import de.nivram710.seretra.notificationServices.startLocationListenerService;
@@ -73,7 +73,6 @@ public class gps_service extends Service {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @SuppressLint({"HardwareIds", "MissingPermission"})
                     public void run() {
-                        String getData;
                         String imei;
 
                         String longtitude = String.valueOf(location.getLongitude());
@@ -89,23 +88,23 @@ public class gps_service extends Service {
                             imei = "0";
                         }
 
-                        getData = "?imei=";
-                        getData += imei;
-                        getData += "&longtitude=";
-                        getData += longtitude;
-                        getData += "&latitude=";
-                        getData += latitude;
+                        String data;
+                        data = "?imei=" + imei;
+                        data += "&longtitude=" + longtitude;
+                        data += "&latitude=" + latitude;
 
                         try {
+                            InputStream response = new URL(upload_url_String + data).openStream();
+                            String responseBody = new Scanner(response).useDelimiter("\\A").next();
 
-                            URL upload_url = new URL(upload_url_String + getData);
+                            if(responseBody.equals("-1")) {
+                                Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(VIBRATOR_SERVICE);
+                                if(vibrator != null) {
+                                    vibrator.vibrate(2000);
+                                }
 
-                            HttpURLConnection httpURLConnectionUpload = (HttpURLConnection) upload_url.openConnection();
-                            httpURLConnectionUpload.setDoOutput(true);
-                            httpURLConnectionUpload.setDoInput(true);
-                            InputStream inputStream = httpURLConnectionUpload.getInputStream();
-                            inputStream.close();
-                            httpURLConnectionUpload.disconnect();
+                            }
+                            response.close();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -152,51 +151,51 @@ public class gps_service extends Service {
         startForeground(status_id, createNotification(getText(R.string.app_name), getText(R.string.notification_text_start), R.drawable.notification_icon));
     }
 
-    private Notification createNotification(CharSequence title, CharSequence text, int icon) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Intent startLocationListenerIntent = new Intent(getApplicationContext(), startLocationListenerService.class);
-                PendingIntent startLocationListenerPendingIntent = PendingIntent.getService(this, 0, startLocationListenerIntent, 0);
-                NotificationCompat.Action startAction = new NotificationCompat.Action(R.drawable.notification_start_location_listener, "Start", startLocationListenerPendingIntent);
+    private android.app.Notification createNotification(CharSequence title, CharSequence text, int icon) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent startLocationListenerIntent = new Intent(getApplicationContext(), startLocationListenerService.class);
+            PendingIntent startLocationListenerPendingIntent = PendingIntent.getService(this, 0, startLocationListenerIntent, 0);
+            NotificationCompat.Action startAction = new NotificationCompat.Action(R.drawable.notification_start_location_listener, "Start", startLocationListenerPendingIntent);
 
-                Intent stopLocationListenerIntent = new Intent(getApplicationContext(), stopLocationListenerService.class);
-                PendingIntent stopLocationListenerPendingIntent = PendingIntent.getService(this, 0, stopLocationListenerIntent, 0);
-                NotificationCompat.Action stopAction = new NotificationCompat.Action(R.drawable.notification_stop_location_listener, "Stop", stopLocationListenerPendingIntent);
+            Intent stopLocationListenerIntent = new Intent(getApplicationContext(), stopLocationListenerService.class);
+            PendingIntent stopLocationListenerPendingIntent = PendingIntent.getService(this, 0, stopLocationListenerIntent, 0);
+            NotificationCompat.Action stopAction = new NotificationCompat.Action(R.drawable.notification_stop_location_listener, "Stop", stopLocationListenerPendingIntent);
 
-                Intent pauseLocationListenerIntent = new Intent(getApplicationContext(), pauseLocationListenerService.class);
-                PendingIntent pauseLocationListenerPendingIntent = PendingIntent.getService(this, 0, pauseLocationListenerIntent, 0);
-                NotificationCompat.Action pauseAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, "Pause", pauseLocationListenerPendingIntent);
-                if (pause) {
-                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, status_channel_id)
-                            .setContentTitle(title)
-                            .setContentText(text)
-                            .setSmallIcon(icon)
-                            .setColorized(true)
-                            .setColor(Color.argb(0, 0, 125, 160))
-                            .addAction(stopAction)
-                            .addAction(startAction);
+            Intent pauseLocationListenerIntent = new Intent(getApplicationContext(), pauseLocationListenerService.class);
+            PendingIntent pauseLocationListenerPendingIntent = PendingIntent.getService(this, 0, pauseLocationListenerIntent, 0);
+            NotificationCompat.Action pauseAction = new NotificationCompat.Action(R.drawable.notification_pause_location_listener, "Pause", pauseLocationListenerPendingIntent);
+            if (pause) {
+                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, status_channel_id)
+                        .setContentTitle(title)
+                        .setContentText(text)
+                        .setSmallIcon(icon)
+                        .setColorized(true)
+                        .setColor(Color.argb(0, 0, 125, 160))
+                        .addAction(stopAction)
+                        .addAction(startAction);
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            notificationBuilder.setChannelId(status_channel_id);
-                        }
-
-                    return notificationBuilder.build();
-                } else {
-                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, status_channel_id)
-                            .setContentTitle(title)
-                            .setContentText(text)
-                            .setSmallIcon(icon)
-                            .setColorized(true)
-                            .setColor(Color.argb(0, 0, 125, 160))
-                            .addAction(stopAction)
-                            .addAction(pauseAction);
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        notificationBuilder.setChannelId(status_channel_id);
-                    }
-
-                    return notificationBuilder.build();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    notificationBuilder.setChannelId(status_channel_id);
                 }
+
+                return notificationBuilder.build();
+            } else {
+                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, status_channel_id)
+                        .setContentTitle(title)
+                        .setContentText(text)
+                        .setSmallIcon(icon)
+                        .setColorized(true)
+                        .setColor(Color.argb(0, 0, 125, 160))
+                        .addAction(stopAction)
+                        .addAction(pauseAction);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    notificationBuilder.setChannelId(status_channel_id);
+                }
+
+                return notificationBuilder.build();
             }
+        }
         return null;
     }
 
