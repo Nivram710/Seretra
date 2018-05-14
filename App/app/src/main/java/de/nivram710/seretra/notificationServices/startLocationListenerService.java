@@ -39,11 +39,19 @@ public class startLocationListenerService extends Service {
 
         gps_service.setPause(false);
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-            startForeground(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_start), R.drawable.notification_icon));
+            if(gps_service.getGPSEanbled()) {
+                startForeground(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_start), R.drawable.notification_icon));
+            } else {
+                startForeground(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_gps_disabled), R.drawable.notification_icon));
+            }
         } else {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             if (notificationManager != null) {
-                notificationManager.notify(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_start), R.drawable.notification_icon));
+                if(gps_service.getGPSEanbled()) {
+                    notificationManager.notify(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_start), R.drawable.notification_icon));
+                } else{
+                    notificationManager.notify(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_gps_disabled), R.drawable.notification_icon));
+                }
             }
         }
         this.stopSelf();

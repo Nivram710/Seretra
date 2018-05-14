@@ -39,6 +39,7 @@ public class gps_service extends Service {
     private static LocationListener locationListener;
     private String status_channel_id = "StatusChannel";
     private static boolean pause = false;
+    private static boolean gpsEnabled = true;
     private static int minTimeGPS = 1000;
     private static int minDistanceGPS = 5;
     private static int vibrationDurration = 2000;
@@ -124,6 +125,8 @@ public class gps_service extends Service {
 
             @Override
             public void onProviderEnabled(String s) {
+                gpsEnabled = true;
+                showNotification();
             }
 
             /**
@@ -132,10 +135,12 @@ public class gps_service extends Service {
              */
             @Override
             public void onProviderDisabled(String s) {
+                gpsEnabled = false;
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 Toast.makeText(gps_service.this, getText(R.string.toast_settings_location), Toast.LENGTH_LONG).show();
+                showNotification();
             }
         };
 
@@ -149,7 +154,6 @@ public class gps_service extends Service {
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void showNotification() {
-        int status_id = 101;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel statusChannel = new NotificationChannel(status_channel_id, getText(R.string.notification_channel_name), NotificationManager.IMPORTANCE_DEFAULT);
 
@@ -159,7 +163,11 @@ public class gps_service extends Service {
             }
         }
 
-        startForeground(status_id, createNotification(getText(R.string.app_name), getText(R.string.notification_text_start), R.drawable.notification_icon));
+        if(gpsEnabled) {
+            startForeground(getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_start), R.drawable.notification_icon));
+        } else {
+            startForeground(getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_gps_disabled), R.drawable.notification_icon));
+        }
     }
 
     /**
@@ -264,6 +272,13 @@ public class gps_service extends Service {
      */
     public static int getMinDistanceGPS() {
         return minDistanceGPS;
+    }
+
+    /**
+     * Die Methode gibt den zurück, ob das GPS-Modul aktiv ist
+     */
+    public static boolean getGPSEanbled() {
+        return gpsEnabled;
     }
 
     /**
