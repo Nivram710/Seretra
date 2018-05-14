@@ -30,8 +30,6 @@ import de.nivram710.seretra.notificationServices.pauseLocationListenerService;
 import de.nivram710.seretra.notificationServices.startLocationListenerService;
 import de.nivram710.seretra.notificationServices.stopLocationListenerService;
 
-// todo: Doc Comment bei allen Klassen
-
 /**
  * Die Klasse ist für die Ortung des Nutzers verantwortlich
  */
@@ -56,6 +54,9 @@ public class gps_service extends Service {
         showNotification();
     }
 
+    /**
+     * In der onStartCommand Methode wird ein Location Listener erstellt
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("MissingPermission")
     @Override
@@ -125,6 +126,10 @@ public class gps_service extends Service {
             public void onProviderEnabled(String s) {
             }
 
+            /**
+             * Die Methode überprüft, ob GPS aktiv ist, ansonsten werden die Einstellungen
+             * im Unterpunk GPS geöffnet, damit GPS wieder aktiviert wird
+             */
             @Override
             public void onProviderDisabled(String s) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -139,6 +144,9 @@ public class gps_service extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    /**
+     * Diese Methode startet den Foreground Service
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void showNotification() {
         int status_id = 101;
@@ -154,6 +162,9 @@ public class gps_service extends Service {
         startForeground(status_id, createNotification(getText(R.string.app_name), getText(R.string.notification_text_start), R.drawable.notification_icon));
     }
 
+    /**
+     * Diese Methode erstellt und formatiert die Notification
+     */
     private android.app.Notification createNotification(CharSequence title, CharSequence text, int icon) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Intent startLocationListenerIntent = new Intent(getApplicationContext(), startLocationListenerService.class);
@@ -202,36 +213,62 @@ public class gps_service extends Service {
         return null;
     }
 
+    /**
+     * Die Methode deaktiviert den LocationListener
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
         if (locationManager != null) locationManager.removeUpdates(locationListener);
     }
 
-    public static LocationManager getLocationManager() {
-        return locationManager;
-    }
-
+    /**
+     * Die Methode gibt den LocationListener zurück
+     */
     public static LocationListener getLocationListener() {
         return locationListener;
     }
 
+    /**
+     * Die Methode gibt den LocationManager zurück
+     */
+    public static LocationManager getLocationManager() {
+        return locationManager;
+    }
+
+    /**
+     * Die Methode setzt den Pause-Wert
+     */
     public static void setPause(boolean value) {
         pause = value;
     }
 
+    /**
+     * Die Methode gibt den Pause-Wert zurück
+     */
     public static boolean getPause() {
         return pause;
     }
 
+    /**
+     * Die Methode gibt den Zeit-Wert zurück, der vergehen muss,
+     * bevor nach der neuen Position gefragt wird
+     */
     public static int getMinTimeGPS(){
         return minTimeGPS;
     }
 
+    /**
+     * Die Methode gibt den Distanz-Wert zurück, der zurückgelegt werden muss,
+     * bevor die neue Position zum Server gesendet wird
+     */
     public static int getMinDistanceGPS() {
         return minDistanceGPS;
     }
 
+    /**
+     * Die Methode gibt die Foreground ID zurück
+     */
     public static int getForegroundID() {
         return 101;
     }

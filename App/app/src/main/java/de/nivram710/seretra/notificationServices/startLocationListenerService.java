@@ -27,6 +27,9 @@ public class startLocationListenerService extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    /**
+     * Diese Methode zeigt die Notification an
+     */
     @SuppressLint("MissingPermission")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -53,6 +56,9 @@ public class startLocationListenerService extends Service {
         super.onDestroy();
     }
 
+    /**
+     * Diese Methode erstellt und formatiert díe Notification
+     */
     private Notification createNotification(CharSequence title, CharSequence text, int icon) {
         String status_channel_id = "StatusChannel";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

@@ -26,6 +26,9 @@ public class pauseLocationListenerService extends Service {
         return null;
     }
 
+    /**
+     * Diese Methode zeigt die Notification an
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         LocationManager locationManager = gps_service.getLocationManager();
@@ -51,6 +54,9 @@ public class pauseLocationListenerService extends Service {
         super.onDestroy();
     }
 
+    /**
+     * Diese Methode erstellt und formatiert díe Notification
+     */
     private Notification createNotification(CharSequence title, CharSequence text, int icon) {
         String status_channel_id = "StatusChannel";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

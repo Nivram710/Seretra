@@ -16,6 +16,9 @@ public class stopLocationListenerService extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    /**
+     * Die Methode beendet die App mit allen Services und Applications
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -31,6 +34,10 @@ public class stopLocationListenerService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    /**
+     * Wenn sich der Stopp-Service selber beendet, gibt er nocht eine Warnung aus,
+     * dass Seretra nicht mehr aktiv ist
+     */
     @Override
     public void onDestroy() {
         Toast.makeText(getApplicationContext(), getText(R.string.toast_warning_stop), Toast.LENGTH_LONG).show();

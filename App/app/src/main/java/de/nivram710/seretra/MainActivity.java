@@ -62,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Die Methode startet den GPS-Service
-     *
-     * @return void
      */
     @SuppressLint("SetTextI18n")
     private void startGPSService() {
