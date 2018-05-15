@@ -37,19 +37,11 @@ public class pauseLocationListenerService extends Service {
 
         gps_service.setPause(true);
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-            if(gps_service.getGPSEanbled()) {
                 startForeground(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_pause), R.drawable.notification_icon));
-            } else {
-                startForeground(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_gps_disabled), R.drawable.notification_icon));
-            }
         } else {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             if (notificationManager != null) {
-                if(gps_service.getGPSEanbled()) {
-                    notificationManager.notify(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_pause), R.drawable.notification_icon));
-                } else{
-                    notificationManager.notify(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_gps_disabled), R.drawable.notification_icon));
-                }
+                notificationManager.notify(gps_service.getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_pause), R.drawable.notification_icon));
             }
         }
         this.stopSelf();
@@ -85,7 +77,7 @@ public class pauseLocationListenerService extends Service {
                         .setContentText(text)
                         .setSmallIcon(icon)
                         .setColorized(true)
-                        .setColor(Color.argb(0, 0, 125, 160))
+                        .setColor(Color.argb(0, 255, 75, 75))
                         .addAction(stopAction)
                         .addAction(startAction);
 

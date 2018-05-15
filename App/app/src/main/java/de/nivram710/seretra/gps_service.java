@@ -37,7 +37,7 @@ public class gps_service extends Service {
 
     private static LocationManager locationManager;
     private static LocationListener locationListener;
-    private String status_channel_id = "StatusChannel";
+    private static String status_channel_id = "StatusChannel";
     private static boolean pause = false;
     private static boolean gpsEnabled = true;
     private static int minTimeGPS = 1000;
@@ -164,16 +164,16 @@ public class gps_service extends Service {
         }
 
         if(gpsEnabled) {
-            startForeground(getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_start), R.drawable.notification_icon));
+            startForeground(getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_start), R.drawable.notification_icon, Color.rgb(0, 125, 160)));
         } else {
-            startForeground(getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_gps_disabled), R.drawable.notification_icon));
+            startForeground(getForegroundID(), createNotification(getText(R.string.app_name), getText(R.string.notification_text_gps_disabled), R.drawable.notification_icon, Color.argb(0, 255, 75, 75)));
         }
     }
 
     /**
      * Diese Methode erstellt und formatiert die Notification
      */
-    private android.app.Notification createNotification(CharSequence title, CharSequence text, int icon) {
+    private android.app.Notification createNotification(CharSequence title, CharSequence text, int icon, int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Intent startLocationListenerIntent = new Intent(getApplicationContext(), startLocationListenerService.class);
             PendingIntent startLocationListenerPendingIntent = PendingIntent.getService(this, 0, startLocationListenerIntent, 0);
@@ -192,7 +192,7 @@ public class gps_service extends Service {
                         .setContentText(text)
                         .setSmallIcon(icon)
                         .setColorized(true)
-                        .setColor(Color.argb(0, 0, 125, 160))
+                        .setColor(color)
                         .addAction(stopAction)
                         .addAction(startAction);
 
@@ -207,7 +207,7 @@ public class gps_service extends Service {
                         .setContentText(text)
                         .setSmallIcon(icon)
                         .setColorized(true)
-                        .setColor(Color.argb(0, 0, 125, 160))
+                        .setColor(color)
                         .addAction(stopAction)
                         .addAction(pauseAction);
 
@@ -286,5 +286,12 @@ public class gps_service extends Service {
      */
     public static int getForegroundID() {
         return 101;
+    }
+
+    /**
+     * Die Methode gibt die status_channel_id zurück
+     */
+    public static String getStatus_channel_id() {
+        return status_channel_id;
     }
 }
