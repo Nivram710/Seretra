@@ -31,4 +31,7 @@ was zur Folge hat, dass zwei Personen die unter und über einer Brücke stehen
 als kollidierend erkannt werden.
 
 2. Auch wenn das System dezentralisiert funktioniert, ist sind die Berechnungen
-sehr arbeitsintensiv.
+in z. B. Grossstädten sehr arbeitsintensiv.
+
+3. Ein Grossteil der Verkehrsteilnehmer muss Seretra benutzen, damit ein
+deutlicher Effekt erzielt werden kann.
