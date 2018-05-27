@@ -5,7 +5,7 @@ $latitude = $_GET["latitude"];
 $time = round(microtime(true) * 1000);
 
 # TODO: Error handling
-exec("python /home/pi/development/mint/seretra/Prediction/append.py"
+exec("python Seretra/Prediction/append.py"
   . " " . $imei
   . " " . $time
   . " " . $longitude
