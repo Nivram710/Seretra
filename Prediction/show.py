@@ -3,6 +3,8 @@ from read import read_data
 
 
 def show(objects, points=[]):
+    if len(objects) == 0:
+        print("Nothing to show")
     for obj in objects.values():
         obj_interpolated = obj  # interpolate(obj, 100)
         xs = list(map(lambda d: d[0].x, obj_interpolated))
