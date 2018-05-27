@@ -82,6 +82,7 @@ public class gps_service extends Service {
 
                         String longtitude = String.valueOf(location.getLongitude());
                         String latitude = String.valueOf(location.getLatitude());
+                        String altitude = String.valueOf(location.getAltitude());
 
 
                         String upload_url_String = "http://nivram710.ddns.net/upload.php";
@@ -97,6 +98,7 @@ public class gps_service extends Service {
                         data = "?imei=" + imei;
                         data += "&longtitude=" + longtitude;
                         data += "&latitude=" + latitude;
+                        data += "&altitude=" + altitude;
 
                         try {
                             InputStream response = new URL(upload_url_String + data).openStream();
