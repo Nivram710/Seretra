@@ -1,7 +1,7 @@
 import sys
 import os
 
-max_datapoints = 15
+max_datapoints = 60
 
 assert len(sys.argv) == 6
 
