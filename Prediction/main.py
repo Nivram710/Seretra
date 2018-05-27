@@ -2,6 +2,7 @@ from collision import find_collision
 from predict import predict
 from read import read_data
 from show import show
+import time
 
 danger_path = "/var/www/html/.danger/"
 
@@ -25,3 +26,4 @@ while True:
                     myfile.write(keys[i] + " " + str(collision[1]))
 
     show(objects)
+    time.sleep(1)
