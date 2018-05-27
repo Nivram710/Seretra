@@ -35,6 +35,7 @@ import de.nivram710.seretra.notificationServices.stopLocationListenerService;
  */
 public class gps_service extends Service {
 
+    private static String upload_url_String = "http://nivram710.ddns.net/upload.php";
     private static LocationManager locationManager;
     private static LocationListener locationListener;
     private static String status_channel_id = "StatusChannel";
@@ -85,7 +86,6 @@ public class gps_service extends Service {
                         String altitude = String.valueOf(location.getAltitude());
 
 
-                        String upload_url_String = "http://nivram710.ddns.net/upload.php";
 
                         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                         if (telephonyManager != null) {
