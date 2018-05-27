@@ -41,6 +41,7 @@ einen Webserver, der PHP unterstützt (Apache/nginx).
 # mkdir .danger
 ```
 \<Seretra\> = wo sie Seretra installieren wollen
+
 \<Webserver\> = wo ihr Webserver nach Seiten sucht (/var/www/...).
 
 # Euer Seretra-Team 
