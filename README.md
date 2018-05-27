@@ -29,5 +29,19 @@ Menschen durch die Gegend zu Navigieren, ist das ein optinales Ziel von uns.
 
 Wir hoffen, dass unser Projekt die Welt ein wenig sicherer macht!
 
+## Installation
+Die Seretra App kommuniziert mit dem Server ueber eine Website. Sie brauchen
+einen Webserver, der PHP unterstützt (Apache/nginx).
+```
+# git clone https://github.com/nivram710/Seretra <Seretra>
+# cd <Webserver>
+# ln -s <Seretra>/PHP-Scripts/upload.php upload.php
+# ln -s <Seretra> Seretra
+# mkdir .data
+# mkdir .danger
+```
+<Seretra> = wo sie Seretra installieren wollen
+<Webserver> = wo ihr Webserver nach Seiten sucht (/var/www/...).
+
 # Euer Seretra-Team 
 Edgar, Marvin K., Olaf, Ben, Timo, Marvin J.
