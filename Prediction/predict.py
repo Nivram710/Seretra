@@ -44,13 +44,12 @@ def applyWeights(data, weights):
     return weighted_data
 
 
-def predict(data, time_step, times=1):
-    # TODO: Should we interpolate each time?
-    data = interpolate(data, time_step)
+def predict(data, repeats=1):
     results = []
-    for i in range(times):
+    for i in range(repeats):
         positions = list(map(lambda d: d[0], data))
         times = list(map(lambda d: d[1], data))
+        time_step = times[-1] - times[-2]
 
         # Get information about the positions
         movements, angles, _, _ = unpack(positions)
@@ -67,9 +66,6 @@ def predict(data, time_step, times=1):
                                   predicted_magnitude,
                                   True)
 
-        print("previous magnitude:", movements[-1].getMagnitude())
-        print("current  magnitude:", predicted_magnitude)
-
         # Dampen rotation
         predicted_movement = predicted_movement.rotated(
                 -predicted_movement.getAngle() * 0.95)
@@ -77,7 +73,7 @@ def predict(data, time_step, times=1):
         position = (pack(predicted_movement, angles, positions),
                     times[-1] + time_step)
 
-        data.append(position)
         results.append(position)
+        data.append(position)
 
     return results
