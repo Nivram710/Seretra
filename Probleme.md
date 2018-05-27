@@ -6,13 +6,12 @@ zurückzugeben (Wahrscheinlich wegen der Quadratwurzel).
 
 ## Diese Probleme wären in einer richtigen Umsetzung nicht vorhanden:
 
-1. Handys können aufgrund der Android API nur ungefähr ein mal pro Sekunde
-ihre Position abfragen. Dies hat zur Folge, dass unser Vorhersage Programm in
-einigen Situationen nicht genug Daten hat, um eine korrekte Abschätzung zu
-geben. Zusätzlich ist die ständige Kommunikation mit dem Server sehr intensiv,
-was sich negativ auf die Batterie des Handys ausübt.
-Die Lösung hierzu ist ein eigenes Gerät zu bauen, welches die Positionen
-abfragt.
+1. Da Handys nicht gerade sehr genaue GPS-Sensoren haben und es vorkommen kann,
+dass das Handy eine Positionsänderung erkennt, obwohl sich das Handy
+an der exakt gleichen Stelle befindet, kann unser Vorhersage Programm nicht
+korrekt arbeiten. Deswegen haben wir uns dazu entschieden eine Verzögerung 
+bei der Positionsermittlung einzubauen, um sowohl die Sprünge, als auch
+eine ungewollte DOS-Attacke auf den Server zu verhindern.
 
 2. Alle Daten werden an einen zentralen Server gesendet. Das ist sehr
 gefährlich für die Sicherheit und Privatsphäre der Nutzer, da die Besitzer
@@ -23,6 +22,12 @@ Netzwerk zu bauen, wobei Seretra nicht an einen Server sendet, sondern nur an
 die umliegenden Server Module, welches in Autos eingebaut werden. Aufgrund von
 den benötigten Funk Lizenzen war dies in unserem Projekt nicht möglich.
 
+3. Das ständige Abfragen und Hochladen der Position des Handys ist sehr
+arbeitsintensiv und wirkt sich somit negativ auf die Akku-Laufzeit aus.
+Darum haben wir eine Pause-Funktion eingebaut, damit der Handy-Akku 
+geschont wird, wenn man sich nicht im Straßenverkehr befindet. Ein weiterer
+Ansatz wäre die Entwicklung eines eigenen Gerätes, das speziell für diese Zwecke
+konzipiert worden ist.
 
 ## Diese Probleme wären auch in einer richtigen Umsetzung vorhanden:
 
@@ -31,7 +36,7 @@ was zur Folge hat, dass zwei Personen die unter und über einer Brücke stehen
 als kollidierend erkannt werden.
 
 2. Auch wenn das System dezentralisiert funktioniert, ist sind die Berechnungen
-in z. B. Grossstädten sehr arbeitsintensiv.
+in z.B. Großstädten sehr arbeitsintensiv.
 
-3. Ein Grossteil der Verkehrsteilnehmer muss Seretra benutzen, damit ein
+3. Ein Großteil der Verkehrsteilnehmer muss Seretra benutzen, damit ein
 deutlicher Effekt erzielt werden kann.
