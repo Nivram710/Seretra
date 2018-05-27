@@ -81,9 +81,10 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void showLocation(String location) {
 
-        String titudes[] = location.split(";");
-        String latitudeString = titudes[0];
-        String longtitudeString = titudes[1];
+        String positionData[] = location.split(";");
+        String latitudeString = positionData[0];
+        String longtitudeString = positionData[1];
+        String altitudeString = positionData[2];
 
         if (latitudeString.contains("-")) {
             latitudeString = "S" + latitudeString.replace("-", "");
@@ -97,7 +98,9 @@ public class MainActivity extends AppCompatActivity {
             longtitudeString = "E" + longtitudeString;
         }
 
-        koordinatenText.setText(latitudeString + "\n" + longtitudeString);
+        altitudeString = "H: " + altitudeString;
+
+        koordinatenText.setText(latitudeString + "\n" + longtitudeString+ "\n" + altitudeString);
 
     }
 
