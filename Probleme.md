@@ -6,14 +6,7 @@ zurückzugeben (Wahrscheinlich wegen der Quadratwurzel).
 
 ## Diese Probleme wären in einer richtigen Umsetzung nicht vorhanden:
 
-1. Da Handys nicht gerade sehr genaue GPS-Sensoren haben und es vorkommen kann,
-dass das Handy eine Positionsänderung erkennt, obwohl sich das Handy
-an der exakt gleichen Stelle befindet, kann unser Vorhersage Programm nicht
-korrekt arbeiten. Deswegen haben wir uns dazu entschieden eine Verzögerung 
-bei der Positionsermittlung einzubauen, um sowohl die Sprünge, als auch
-eine ungewollte DOS-Attacke auf den Server zu verhindern.
-
-2. Alle Daten werden an einen zentralen Server gesendet. Das ist sehr
+1. Alle Daten werden an einen zentralen Server gesendet. Das ist sehr
 gefährlich für die Sicherheit und Privatsphäre der Nutzer, da die Besitzer
 dieses Servers theoretisch die Positionen von allen Nutzern abfragen könnten.
 Zwar werden nicht Namen sondern IMEI-Adressen übermittelt, aber dennoch könnten
@@ -22,7 +15,7 @@ Netzwerk zu bauen, wobei Seretra nicht an einen Server sendet, sondern nur an
 die umliegenden Server Module, welches in Autos eingebaut werden. Aufgrund von
 den benötigten Funk Lizenzen war dies in unserem Projekt nicht möglich.
 
-3. Das ständige Abfragen und Hochladen der Position des Handys ist sehr
+2. Das ständige Abfragen und Hochladen der Position des Handys ist sehr
 arbeitsintensiv und wirkt sich somit negativ auf die Akku-Laufzeit aus.
 Darum haben wir eine Pause-Funktion eingebaut, damit der Handy-Akku 
 geschont wird, wenn man sich nicht im Straßenverkehr befindet. Ein weiterer
@@ -31,9 +24,12 @@ konzipiert worden ist.
 
 ## Diese Probleme wären auch in einer richtigen Umsetzung vorhanden:
 
-1. Man kann die Höhe von Personen aufgrund von GPS-Limitierungen nicht messen,
-was zur Folge hat, dass zwei Personen die unter und über einer Brücke stehen
-als kollidierend erkannt werden.
+1. Da Handys nicht gerade sehr genaue GPS-Sensoren haben und es vorkommen kann,
+dass das Handy eine Positionsänderung erkennt, obwohl sich das Handy
+an der exakt gleichen Stelle befindet, kann unser Vorhersage Programm nicht
+korrekt arbeiten. Deswegen haben wir uns dazu entschieden eine Verzögerung 
+bei der Positionsermittlung einzubauen, um sowohl die Sprünge, als auch
+eine ungewollte DOS-Attacke auf den Server zu verhindern.
 
 2. Auch wenn das System dezentralisiert funktioniert, ist sind die Berechnungen
 in z.B. Großstädten sehr arbeitsintensiv.
