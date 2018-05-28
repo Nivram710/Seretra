@@ -17,7 +17,7 @@ den benötigten Funk Lizenzen war dies in unserem Projekt nicht möglich.
 
 ## Diese Probleme wären auch in einer richtigen Umsetzung vorhanden:
 
-1. Da Handys nicht gerade sehr genaue GPS-Sensoren haben und es vorkommen kann,
+1. Da die GPS-Sensoren der Handys nur auf ca. 5m genau sind und es vorkommen kann,
 dass das Handy eine Positionsänderung erkennt, obwohl sich das Handy
 an der exakt gleichen Stelle befindet, kann unser Vorhersage Programm nicht
 korrekt arbeiten. Deswegen haben wir uns dazu entschieden eine Verzögerung 
