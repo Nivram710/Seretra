@@ -15,13 +15,6 @@ Netzwerk zu bauen, wobei Seretra nicht an einen Server sendet, sondern nur an
 die umliegenden Server Module, welches in Autos eingebaut werden. Aufgrund von
 den benötigten Funk Lizenzen war dies in unserem Projekt nicht möglich.
 
-2. Das ständige Abfragen und Hochladen der Position des Handys ist sehr
-arbeitsintensiv und wirkt sich somit negativ auf die Akku-Laufzeit aus.
-Darum haben wir eine Pause-Funktion eingebaut, damit der Handy-Akku 
-geschont wird, wenn man sich nicht im Straßenverkehr befindet. Ein weiterer
-Ansatz wäre die Entwicklung eines eigenen Gerätes, das speziell für diese Zwecke
-konzipiert worden ist.
-
 ## Diese Probleme wären auch in einer richtigen Umsetzung vorhanden:
 
 1. Da Handys nicht gerade sehr genaue GPS-Sensoren haben und es vorkommen kann,
@@ -31,8 +24,15 @@ korrekt arbeiten. Deswegen haben wir uns dazu entschieden eine Verzögerung
 bei der Positionsermittlung einzubauen, um sowohl die Sprünge, als auch
 eine ungewollte DOS-Attacke auf den Server zu verhindern.
 
-2. Auch wenn das System dezentralisiert funktioniert, ist sind die Berechnungen
+2. Das ständige Abfragen und Hochladen der Position des Handys ist sehr
+arbeitsintensiv und wirkt sich somit negativ auf die Akku-Laufzeit aus.
+Darum haben wir eine Pause-Funktion eingebaut, damit der Handy-Akku 
+geschont wird, wenn man sich nicht im Straßenverkehr befindet. Ein weiterer
+Ansatz wäre die Entwicklung eines eigenen Gerätes, das speziell für diese Zwecke
+konzipiert worden ist.
+
+3. Auch wenn das System dezentralisiert funktioniert, ist sind die Berechnungen
 in z.B. Großstädten sehr arbeitsintensiv.
 
-3. Ein Großteil der Verkehrsteilnehmer muss Seretra benutzen, damit ein
+4. Ein Großteil der Verkehrsteilnehmer muss Seretra benutzen, damit ein
 deutlicher Effekt erzielt werden kann.
