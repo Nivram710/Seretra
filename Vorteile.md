@@ -1,4 +1,4 @@
-# Vorteile von Seretra im Vergleich zu aehnlichen Systemen:
+# Vorteile von Seretra im Vergleich zu ähnlichen Systemen:
 
 Es gibt einige Unternehmen wie z. B. Google, die bereits mit
 Fahrerassistentsystemen (FAS) experimentiert haben; Diese Systeme beruhen aber
