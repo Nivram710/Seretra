@@ -48,7 +48,7 @@ einen Webserver, der PHP unterstützt (Apache/nginx).
 ### Apache
 Wir empfehlen die Ordner .data und .danger mit einer .htaccess Datei zu schützen. Wir nutzen dazu folgenden Code:
 ```
-Order deny,allow
+order deny,allow
 deny from all
 allow from 127.0.0.1
 ```
