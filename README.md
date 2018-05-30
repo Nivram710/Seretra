@@ -52,6 +52,8 @@ order deny,allow
 deny from all
 allow from 127.0.0.1
 ```
+Allerdings kann es sein, dass die Konfigurationsdatei angepasst werden muss, um für Unterverzeichnisse 
+neue Zugriffsberechtigungen festzulegen.
 
 ### Nginx
 Hier muss keine .htaccess Datei erstellt werden, da Nginx den Zugriff auf Ordner mit der standard Konfiguration verbietet.
