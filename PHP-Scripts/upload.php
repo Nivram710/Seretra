@@ -2,7 +2,7 @@
 $imei = $_GET["imei"];
 $longitude = $_GET["longtitude"];
 $latitude = $_GET["latitude"];
-&altitude = $_GET["altitude"];
+$altitude = $_GET["altitude"];
 $time = round(microtime(true) * 1000);
 
 # TODO: Error handling
