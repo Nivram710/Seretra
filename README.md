@@ -52,5 +52,8 @@ Order deny,allow
 Deny from all
 ```
 
+### Nginx
+Hier muss keine .htaccess Datei erstellt werden, da Nginx den Zugriff auf Ordner mit der standard Konfiguration verbietet.
+
 # Euer Seretra-Team 
 Edgar, Marvin K., Olaf, Ben, Timo, Marvin J.
