@@ -1,0 +1,4 @@
+read
+intp .5
+pred 30
+coll 0.001
