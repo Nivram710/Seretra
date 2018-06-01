@@ -16,6 +16,7 @@ echo exec("python Seretra/Prediction/append.py"
 
 if(file_exists('.danger/' . $imei)) {
   readfile('.danger/' . $imei);
+  unlink('.danger/' . $imei);
 } else {
   echo "-1";
 }
