@@ -2,15 +2,15 @@ import glob
 import os
 from vec2 import Vec2
 
-data_path = ".data/"
-objects = {}
+DATA_PATH = ".data/"
 
 
 def read_data():
-    for filename in glob.glob(data_path + "*"):
-        name = filename.lstrip(data_path)
+    objects = {}
+    for filename in glob.glob(DATA_PATH + "*"):
+        name = filename.lstrip(DATA_PATH)
         if(os.path.isdir(filename)):
-            print("dir")
+            print("ignoring directory", filename)
             continue
 
         with open(filename, "r") as f:
