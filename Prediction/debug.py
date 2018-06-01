@@ -46,10 +46,5 @@ while True:
                 if collision:
                     print("COLLISION FOUND")
                     print(collision[1])
-                    with open(danger_path + keys[i], "a") as myfile:
-                        myfile.write(keys[i] + " " + str(collision[1]))
-                    with open(danger_path + keys[j], "a") as myfile:
-                        myfile.write(keys[i] + " " + str(collision[1]))
-
     else:
         print("Command '" + command + "' not found")
