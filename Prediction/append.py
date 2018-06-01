@@ -5,6 +5,7 @@ MAX_DATAPOINTS = 60
 
 assert len(sys.argv) == 6
 
+imei = sys.argv[1]
 time = sys.argv[2]
 x = sys.argv[3]
 y = sys.argv[4]
@@ -16,7 +17,7 @@ float(x)
 float(y)
 float(z)
 
-path = ".data/" + sys.argv[1]
+path = ".data/" + imei
 
 with open(path, "a") as f:
     f.write(time + " " + x + " " + y + " " + z + "\n")

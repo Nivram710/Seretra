@@ -104,7 +104,7 @@ public class gps_service extends Service {
                             InputStream response = new URL(upload_url_String + data).openStream();
                             String responseBody = new Scanner(response).useDelimiter("\\A").next();
 
-                            if(responseBody.equals("-1")) {
+                            if(!responseBody.equals("-1")) {
                                 Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(VIBRATOR_SERVICE);
                                 if(vibrator != null) {
                                     vibrator.vibrate(vibrationDurration);
