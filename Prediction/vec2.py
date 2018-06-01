@@ -8,9 +8,11 @@ class Vec2:
         return math.sqrt(dx**2 + dy**2)
 
     def __init__(self, p1, p2, alternate=False):
+        # Initialize using points
         if not alternate:
             self.x = p1
             self.y = p2
+        # Initialize using rotation, magnitude
         else:
             self.__init__(1, 0)
             self.rotated(p1, True)
