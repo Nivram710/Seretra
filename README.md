@@ -22,13 +22,6 @@ Fußgänger aufmerksam gemacht. Das ganze funktioniert auch mit anderen
 Autos und je nachdem, wie schwerwiegend die Gefahr ist, wird sie anders
 dargestellt.
 
-## Was sind unseren zusätzlichen Ziele?
-Zusätzlich wollen wir das ganze auch als Navigationssystem entwickeln.
-Aber da wir als wichtiger erachten mögliche Unfälle zu verhindern, als
-Menschen durch die Gegend zu Navigieren, ist das ein optinales Ziel von uns.
-
-Wir hoffen, dass unser Projekt die Welt ein wenig sicherer macht!
-
 ## Installation
 Die Seretra App kommuniziert mit dem Server ueber eine Website. Sie brauchen
 einen Webserver, der PHP unterstützt (Apache/nginx).
