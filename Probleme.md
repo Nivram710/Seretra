@@ -1,8 +1,7 @@
 # Probleme mit dem Projekt
 
 ## Diese Probleme versuchen wir momentan zu lösen:
-1. Vec2.getMagnitude scheint bei kleinen Zahlen falsche (zu große) Ergebnisse
-zurückzugeben (Wahrscheinlich wegen der Quadratwurzel).
+/
 
 ## Diese Probleme wären in einer richtigen Umsetzung nicht vorhanden:
 
